@@ -62,7 +62,7 @@ public class ClientModel extends DBConnect {
 
 			// Include data to the database table
 
-			sql = " insert into jpapa_accounts(cid, balance) values('" + cid + "', '" + bal + "')";
+			sql = " insert into brs2021_accounts(cid, balance) values('" + cid + "', '" + bal + "')";
 
 			stmt.executeUpdate(sql);
 			conn.getConnection().close();
@@ -76,7 +76,7 @@ public class ClientModel extends DBConnect {
 
 	public List<ClientModel> getAccounts(int cid) {
 		List<ClientModel> accounts = new ArrayList<>();
-		String query = "SELECT tid,balance FROM jpapa_accounts WHERE cid = ?;";
+		String query = "SELECT tid,balance FROM brs2021_accounts WHERE cid = ?;";
 		try (PreparedStatement statement = connection.prepareStatement(query)) {
 			statement.setInt(1, cid);
 			ResultSet resultSet = statement.executeQuery();

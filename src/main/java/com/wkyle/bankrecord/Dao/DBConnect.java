@@ -23,6 +23,4 @@ public class DBConnect  {
 			System.exit(-1);
 		}
 	}
-
-	
 }

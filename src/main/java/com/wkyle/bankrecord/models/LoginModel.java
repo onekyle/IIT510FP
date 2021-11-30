@@ -8,7 +8,7 @@ import java.sql.Statement;
 import com.wkyle.bankrecord.Dao.DBConnect;
 
 public class LoginModel extends DBConnect {
- 
+
 	private Boolean admin;
 	private int id;
  
@@ -26,38 +26,39 @@ public class LoginModel extends DBConnect {
 	}
 
 	public void setupSQLTable() {
-		String sql = "CREATE TABLE IF NOT EXISTS brs2021_users " +
-				"(pid INTEGER not NULL AUTO_INCREMENT, " +
-				" id VARCHAR(10), " +
-				" income numeric(8,2), " + " pep VARCHAR(3), " +
-				" PRIMARY KEY ( pid ))";
-	}
+//		String dropTable = "DROP TABLE brs2021_users ;";
 
-	public void logAllUsers() {
-		String query = "SELECT * FROM brs2021_users;";
+		String createUsersSql = "CREATE TABLE IF NOT EXISTS brs2021_users " +
+				"(id INTEGER not NULL AUTO_INCREMENT, " +
+				" uname VARCHAR(255), " +
+				" passwd VARCHAR(255)," +
+				" role int, " +
+				" PRIMARY KEY ( id ))";
+
+//		String addPasswd = "ALTER TABLE brs2021_users CHANGE admin admin int;";
+
+		String createTransactionRecordsTable = "CREATE TABLE IF NOT EXISTS brs2021_accounts " +
+				"(tid INTEGER not NULL AUTO_INCREMENT, " +
+				" cid int, " +
+				" balance numeric(8,2), " +
+				" PRIMARY KEY ( tid ))";
+
+		String createBankTable = "CREATE TABLE IF NOT EXISTS brs2021_bank " +
+				"(id INTEGER not NULL AUTO_INCREMENT, " +
+				" name VARCHAR(255), " +
+				" address VARCHAR(255), " +
+				" PRIMARY KEY ( id ))";
 		try {
 			Statement stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
-			ResultSetPrinter.printResultSet(rs);
+//			stmt.executeUpdate(dropTable);
+			stmt.executeUpdate(createUsersSql);
+			stmt.executeUpdate(createTransactionRecordsTable);
+			stmt.executeUpdate(createBankTable);
 		} catch (SQLException se) {
 			se.printStackTrace();
 		}
 	}
 
-	public Boolean createUser(String username, String password) {
-		String query = String.format("INSERT INTO brs2021_users(uname,passwd,admin) VALUES (\"%s\",\"%s\",\"%s\")", username, password, "0");
-		try {
-			Statement stmt = connection.createStatement();
-			int ret =  stmt.executeUpdate(query);
-			if (ret == 1) {
-				return true;
-			}
-		} catch (SQLException se) {
-			se.printStackTrace();
-		}
-		return false;
-	}
-		
 	public Boolean getCredentials(String username, String password){
 		String query = "SELECT * FROM brs2021_users WHERE uname = ? and passwd = ?;";
 		try(PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -67,7 +68,7 @@ public class LoginModel extends DBConnect {
 			if(rs.next()) {
 
 				setId(rs.getInt("id"));
-				setAdmin(rs.getBoolean("admin"));
+				setAdmin(rs.getInt("role") == 0);
 				return true;
 			}
 		 }catch (SQLException e) {

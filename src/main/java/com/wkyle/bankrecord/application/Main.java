@@ -1,5 +1,6 @@
 package com.wkyle.bankrecord.application;
 
+import com.wkyle.bankrecord.controllers.Router;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -16,20 +17,10 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 	
 		//primaryStage.hide();
+		stage = primaryStage;
+		Router.goToLoginView();
+		stage.show();
 
-		try {
-			stage = primaryStage;
-			URL loadURL = getClass().getResource("/com/wkyle/bankrecord/LoginView.fxml");
-			AnchorPane root = (AnchorPane) FXMLLoader.load(loadURL);
-			Scene scene = new Scene(root);
-			scene.getStylesheets().add(getClass().getResource("/com/wkyle/bankrecord/styles.css").toExternalForm());
-			stage.setTitle("Login View");
-			stage.setScene(scene);
-			stage.show();
-
-		} catch (Exception e) {
-			System.out.println("Error occured while inflating view: " + e);
-		}
 	}
 
 	public static void main(String[] args) {

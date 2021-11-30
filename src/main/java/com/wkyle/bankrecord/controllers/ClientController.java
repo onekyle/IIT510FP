@@ -70,16 +70,7 @@ public class ClientController implements Initializable {
 	/***** End TABLEVIEW intel *********************************************************************/
 
 	public void logout() {
-		// System.exit(0);
-		try {
-			AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getResource("/com/wkyle/bankrecord/LoginView.fxml"));
-			Scene scene = new Scene(root);
-			scene.getStylesheets().add(getClass().getResource("/com/wkyle/bankrecord/styles.css").toExternalForm());
-			Main.stage.setScene(scene);
-			Main.stage.setTitle("Login");
-		} catch (Exception e) {
-			System.out.println("Error occured while inflating view: " + e);
-		}
+		Router.goToLoginView();
 	}
 
 	public void createTransaction() {
