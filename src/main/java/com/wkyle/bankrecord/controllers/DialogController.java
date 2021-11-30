@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class DialogController {
@@ -33,6 +34,19 @@ public class DialogController {
         alert.setHeaderText(header);
         alert.setContentText(content);
         alert.show();
+    }
+
+    public static TextInputDialog showInputDialog(String title, String header, String content, String placeholder, Function<String, String> callBack) {
+        TextInputDialog dialog = new TextInputDialog(placeholder);
+        dialog.setTitle(title);
+        dialog.setHeaderText(header);
+        dialog.setContentText(content);
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(str -> {
+            callBack.apply(str);
+        });
+        return dialog;
     }
 
     public static Dialog<AccountModel> accountInfoInputDialog(String title, AccountModel placeHolder, Function<AccountModel, AccountModel> callback) {
@@ -115,17 +129,6 @@ public class DialogController {
                 }
             }
             callback.apply(resultModel);
-//            String name = resultArr.get(0);
-//            String passwd = resultArr.get(1);
-//            String roleType = resultArr.get(2);
-//            AccountModel account = new AccountModel();
-//            account.setUname(name);
-//            account.setPasswdEncrypted(passwd);
-//            account.setRoleType(AccountModel.RoleType.valueOf(roleType));
-//            Boolean flag = AccountHelper.getInstance().createUser(name, passwd, AccountModel.RoleType.valueOf(roleType));
-//            if (flag) {
-//                Platform.runLater(() -> updateTable());
-//            }
         });
 
         return dialog;

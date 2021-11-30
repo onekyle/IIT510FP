@@ -2,23 +2,29 @@ package com.wkyle.bankrecord.controllers;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
 
 import com.wkyle.bankrecord.application.Main;
+import com.wkyle.bankrecord.models.AccountModel;
+import com.wkyle.bankrecord.models.RecordHelper;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import com.wkyle.bankrecord.models.ClientModel;
- 
+import javafx.scene.layout.GridPane;
+import javafx.util.Pair;
+
 
 public class ClientController implements Initializable {
 	
@@ -40,9 +46,13 @@ public class ClientController implements Initializable {
 
 		// auto adjust width of columns depending on their content
 		tblAccounts.setColumnResizePolicy((param) -> true);
-		Platform.runLater(() -> customResize(tblAccounts));
-
-		tblAccounts.setVisible(false); // set invisible initially
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				customResize(tblAccounts);
+			}
+		});
+		tblAccounts.setVisible(false);
 	}
 
     public void customResize(TableView<?> view) {
@@ -60,11 +70,9 @@ public class ClientController implements Initializable {
         }
     }
     
-	public void viewAccounts() throws IOException {
-
+	public void viewAccounts() {
 		tblAccounts.getItems().setAll(cm.getAccounts(userid)); // load table data from ClientModel List
 		tblAccounts.setVisible(true); // set tableview to visible if not
-
 	}
 
 	/***** End TABLEVIEW intel *********************************************************************/
@@ -92,10 +100,121 @@ public class ClientController implements Initializable {
 
 	}
 
+	public void onDeposit() {
+		DialogController.showInputDialog("Deposit", null, "Please enter the amount you want to deposit:", null, new Function<String, String>() {
+			@Override
+			public String apply(String s) {
+				try {
+					double value = Double.parseDouble(s);
+					if (value <= 0) {
+						DialogController.showErrorDialog("Input invalid", "Please check and re-enter");
+					} else {
+						RecordHelper.getInstance().updateRecord(userid, value);
+						Platform.runLater(() -> viewAccounts());
+					}
+				} catch (NumberFormatException e) {
+					DialogController.showErrorDialog("Input invalid", "Please check and re-enter");
+				}
+				return s;
+			}
+		});
+	}
+
+	public void onWithdraw() {
+		DialogController.showInputDialog("Withdraw", null, "Please enter the amount you want to withdraw:", null, new Function<String, String>() {
+			@Override
+			public String apply(String s) {
+				try {
+					double value = Double.parseDouble(s);
+					RecordHelper.getInstance().withdraw(userid, value);
+					Platform.runLater(() -> viewAccounts());
+				} catch (NumberFormatException e) {
+					DialogController.showErrorDialog("Input invalid", "Please check and re-enter");
+				}
+				return s;
+			}
+		});
+	}
+
+	public void onTransfer() {
+		// Create the custom dialog.
+		Dialog<Pair<String, String>> dialog = new Dialog<>();
+		dialog.setTitle("Transfer");
+
+		// Set the button types.
+		ButtonType addButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+		dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
+
+		// Create the username and transfer amount labels and fields.
+		GridPane grid = new GridPane();
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setPadding(new Insets(20, 150, 10, 10));
+
+		TextField username = new TextField();
+		username.setPromptText("Cid");
+		TextField amount = new TextField();
+		amount.setPromptText("Amount");
+
+		grid.add(new Label("Transfer To Cid:"), 0, 0);
+		grid.add(username, 1, 0);
+		grid.add(new Label("Transfer Amount:"), 0, 1);
+		grid.add(amount, 1, 1);
+
+		// Enable/Disable login button depending on whether a username was entered.
+		Node addButton = dialog.getDialogPane().lookupButton(addButtonType);
+		addButton.setDisable(true);
+
+		// Do some validation (using the Java 8 lambda syntax).
+		ChangeListener<Object> inputCallback = (observable, oldValue, newValue) -> {
+			addButton.setDisable(username.getText().trim().isEmpty() || amount.getText().trim().isEmpty());
+		};
+
+		username.textProperty().addListener(inputCallback);
+		amount.textProperty().addListener(inputCallback);
+
+		dialog.getDialogPane().setContent(grid);
+
+		// Request focus on the username field by default.
+		Platform.runLater(() -> username.requestFocus());
+
+		// Convert the result to a username-password-pair when the login button is clicked.
+		dialog.setResultConverter(dialogButton -> {
+			if (dialogButton == addButtonType) {
+				return new Pair(username.getText(), amount.getText());
+			}
+			return null;
+		});
+
+		Optional<Pair<String, String>> result = dialog.showAndWait();
+
+		result.ifPresent(resultPair -> {
+
+			String name = resultPair.getKey();
+			String transferAmount = resultPair.getValue();
+			if (name == null || name.isEmpty() || transferAmount == null || transferAmount.isEmpty()) {
+				DialogController.showErrorDialog("Input invalid", "Please check and re-enter.");
+			} else {
+				try {
+					double doubleAmount = Double.parseDouble(transferAmount);
+					int cid = Integer.parseInt(name);
+					Boolean flag = RecordHelper.getInstance().withdraw(userid, doubleAmount);
+					if (flag) {
+						RecordHelper.getInstance().updateRecord(cid, doubleAmount);
+						Platform.runLater(() -> viewAccounts());
+					}
+				} catch (NumberFormatException e) {
+					DialogController.showErrorDialog("Input invalid", e.toString());
+				}
+			}
+		});
+	}
+
 	public static void setUserid(int user_id) {
 		userid = user_id;
 		System.out.println("Welcome id " + userid);
 	}
+
 
 	public ClientController() {
 

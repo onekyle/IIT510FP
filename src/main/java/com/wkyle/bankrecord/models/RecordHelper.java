@@ -3,6 +3,7 @@ package com.wkyle.bankrecord.models;
 import com.wkyle.bankrecord.Dao.DBConnect;
 import com.wkyle.bankrecord.controllers.DialogController;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -18,6 +19,40 @@ public class RecordHelper {
     }
 
     private DBConnect connect = null;
+
+    public double getBalance(int cid) {
+        if (AccountHelper.getInstance().getAccount(cid) == null) {
+            DialogController.showErrorDialog("Update Record Failed", "");
+            return 0.0;
+        }
+        String query = String.format("SELECT SUM(balance) FROM brs2021_accounts WHERE cid=%d;", cid);
+        try {
+            Statement stmt = connect.getConnection().createStatement();
+            ResultSet result =  stmt.executeQuery(query);
+            if (result.next()) {
+                return result.getDouble(1);
+            }
+        } catch (SQLException se) {
+            se.printStackTrace();
+            DialogController.showErrorDialog("Update Record Failed", se.toString());
+        }
+        return 0.0;
+    }
+
+    public Boolean withdraw(int cid, double balance) {
+        if (balance <= 0) {
+            DialogController.showErrorDialog("Input invalid", "Please check and re-enter");
+            return false;
+        }
+        double remainBalance = RecordHelper.getInstance().getBalance(cid);
+        if (remainBalance < balance) {
+            DialogController.showErrorDialog("Lack of balance", String.format("You have %.2f in your account, please retry", remainBalance));
+            return false;
+        } else {
+            RecordHelper.getInstance().updateRecord(cid, -balance);
+        }
+        return true;
+    }
 
     public Boolean updateRecord(int cid, double balance) {
         if (AccountHelper.getInstance().getAccount(cid) == null) {
