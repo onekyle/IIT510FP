@@ -21,7 +21,7 @@ public class RecordHelper {
     private DBConnect connect = null;
 
     public double getBalance(int cid) {
-        if (AccountHelper.getInstance().getAccount(cid) == null) {
+        if (AccountHelper.getInstance().getAccount(cid, null) == null) {
             DialogController.showErrorDialog("Update Record Failed", "");
             return 0.0;
         }
@@ -55,7 +55,7 @@ public class RecordHelper {
     }
 
     public Boolean updateRecord(int cid, double balance) {
-        if (AccountHelper.getInstance().getAccount(cid) == null) {
+        if (AccountHelper.getInstance().getAccount(cid, null) == null) {
             DialogController.showErrorDialog("Update Record Failed", "");
             return false;
         }

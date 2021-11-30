@@ -27,9 +27,11 @@ public class LoginModel extends DBConnect {
 				" uname VARCHAR(255), " +
 				" passwd VARCHAR(255)," +
 				" role int, " +
-				" PRIMARY KEY ( id ))";
+				" PRIMARY KEY ( id ))," +
+				"UNIQUE (uname)";
 
-//		String addPasswd = "ALTER TABLE brs2021_users CHANGE admin admin int;";
+//		String alter = "ALTER TABLE Persons\n" +
+//				"ADD UNIQUE (uname);";
 
 		String createTransactionRecordsTable = "CREATE TABLE IF NOT EXISTS brs2021_accounts " +
 				"(tid INTEGER not NULL AUTO_INCREMENT, " +
@@ -46,6 +48,7 @@ public class LoginModel extends DBConnect {
 			Statement stmt = connection.createStatement();
 //			stmt.executeUpdate(dropTable);
 			stmt.executeUpdate(createUsersSql);
+//			stmt.executeUpdate(alter);
 			stmt.executeUpdate(createTransactionRecordsTable);
 			stmt.executeUpdate(createBankTable);
 		} catch (SQLException se) {

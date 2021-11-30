@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: bbbdbd;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.wkyle.bankrecord.controllers.LoginController">
+<AnchorPane prefHeight="400.0" prefWidth="660.0" style="-fx-background-color: bbbdbd;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.wkyle.bankrecord.controllers.LoginController">
    <children>
       <Label fx:id="lblError" contentDisplay="CENTER" layoutX="40.0" layoutY="315.0" text="" />
       <FlowPane alignment="TOP_CENTER" columnHalignment="CENTER" hgap="20.0" layoutX="167.0" layoutY="120.0" minWidth="266.0" prefHeight="60.0" prefWidth="266.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">

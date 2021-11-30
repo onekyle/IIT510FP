@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class AccountHelper {
 
@@ -28,8 +29,14 @@ public class AccountHelper {
         return String.valueOf(passwd.hashCode());
     }
 
-    public AccountModel getAccount(int cid) {
-        String query = "SELECT * FROM brs2021_users WHERE id = " + cid;
+    public AccountModel getAccount(int cid, String name) {
+        String condition = null;
+        if (name != null && !name.isEmpty()) {
+            condition = " WHERE uname = \"" + name + "\"";
+        } else {
+            condition = " WHERE id = " + cid;
+        }
+        String query = "SELECT * FROM brs2021_users" + condition;
         try {
             Statement stmt = connect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(query);
@@ -48,6 +55,13 @@ public class AccountHelper {
     }
 
     public Boolean createUser(String username, String password, AccountModel.RoleType role) {
+        if (username != null && !username.isEmpty()) {
+            AccountModel existAccount = getAccount(0,username);
+            if (existAccount != null) {
+                DialogController.showErrorDialog("User name exist", "Please try another user name");
+                return false;
+            }
+        }
         String query = String.format("INSERT INTO brs2021_users(uname,passwd,role) VALUES (\"%s\",\"%s\",%d)", username, encryptedPassword(password), role.ordinal());
         try {
             Statement stmt = connect.getConnection().createStatement();
@@ -62,8 +76,16 @@ public class AccountHelper {
         return false;
     }
 
-    public Boolean editAccount(AccountModel account) {
-        String query = String.format("UPDATE brs2021_users SET uname=\"%s\", passwd=\"%s\", role=%d WHERE id=%d;", account.getUname(), account.getPasswdEncrypted(), account.getRoleType().ordinal(), account.getCid());
+    public Boolean editAccount(AccountModel newAccount, AccountModel old) {
+        if (!Objects.equals(newAccount.getUname(), old.getUname())) { // user name changed
+            // check whether the name is valid
+            AccountModel existAccount = getAccount(0,newAccount.getUname());
+            if (existAccount != null) {
+                DialogController.showErrorDialog("User name exist", "Please try another user name");
+                return false;
+            }
+        }
+        String query = String.format("UPDATE brs2021_users SET uname=\"%s\", passwd=\"%s\", role=%d WHERE id=%d;", newAccount.getUname(), newAccount.getPasswdEncrypted(), newAccount.getRoleType().ordinal(), newAccount.getCid());
         try {
             Statement statement = connect.getConnection().createStatement();
             int result = statement.executeUpdate(query);

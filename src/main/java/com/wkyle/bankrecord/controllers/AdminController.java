@@ -174,7 +174,7 @@ public class AdminController implements Initializable {
 					// passwd changed, need re encrypt
 					accountModel.setPasswdEncrypted(AccountHelper.getInstance().encryptedPassword(accountModel.getPasswdEncrypted()));
 				}
-				Boolean flag = AccountHelper.getInstance().editAccount(accountModel);
+				Boolean flag = AccountHelper.getInstance().editAccount(accountModel, model);
 				if (flag) {
 					Platform.runLater(() -> updateTable());
 				}

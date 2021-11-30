@@ -129,7 +129,7 @@ public class AccountManagerController implements Initializable {
         DialogController.accountInfoInputDialog("Edit Account", model, new Function<AccountModel, AccountModel>() {
             @Override
             public AccountModel apply(AccountModel accountModel) {
-                Boolean flag = AccountHelper.getInstance().editAccount(accountModel);
+                Boolean flag = AccountHelper.getInstance().editAccount(accountModel, model);
                 if (flag) {
                     Platform.runLater(() -> updateTable());
                 }
