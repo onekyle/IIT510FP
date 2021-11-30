@@ -20,10 +20,10 @@ import java.util.function.Function;
 
 public class DialogController {
 
-    public static void showExceptionDialog(Exception e, String title) {
+    public static void showErrorDialog(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title != null ? title : "Error");
-        alert.setContentText(e.toString());
+        alert.setContentText(content);
         alert.show();
     }
 

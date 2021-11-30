@@ -20,8 +20,8 @@
          </effect>
          <children>
             <Button layoutX="158.0" layoutY="229.0" mnemonicParsing="false" onAction="#submitUpdate" text="Submit" />
-            <TextField layoutX="104.0" layoutY="151.0" />
-            <TextField layoutX="104.0" layoutY="48.0" />
+            <TextField fx:id="recordBalanceTF" layoutX="104.0" layoutY="151.0" />
+            <TextField fx:id="recordIDTF" layoutX="104.0" layoutY="48.0" />
             <Label layoutX="109.0" layoutY="22.0" text="Enter desired ID" />
             <Label layoutX="109.0" layoutY="109.0" text="Enter new balance" />
             <Label layoutX="14.0" layoutY="234.0" text="Record Updated?" textFill="#803131" />
@@ -33,7 +33,7 @@
          </effect>
          <children>
             <Button layoutX="145.0" layoutY="171.0" mnemonicParsing="false" onAction="#submitDelete" text="Submit" />
-            <TextField layoutX="105.0" layoutY="93.0" />
+            <TextField fx:id="deleteTidTF" layoutX="105.0" layoutY="93.0" />
             <Label layoutX="109.0" layoutY="55.0" text="Enter desired ID" />
             <Label layoutX="14.0" layoutY="176.0" text="Record Deleted?" textFill="#803131" />
          </children>

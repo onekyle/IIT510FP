@@ -4,6 +4,7 @@ import com.wkyle.bankrecord.Dao.DBConnect;
 import com.wkyle.bankrecord.controllers.DialogController;
 import javafx.scene.control.Dialog;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -27,6 +28,25 @@ public class AccountHelper {
         return String.valueOf(passwd.hashCode());
     }
 
+    public AccountModel getAccount(int cid) {
+        String query = "SELECT * FROM brs2021_users WHERE id = " + cid;
+        try {
+            Statement stmt = connect.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            if(rs.next()) {
+                AccountModel account = new AccountModel();
+                account.setCid(rs.getInt("id"));
+                account.setPasswdEncrypted(rs.getString("passwd"));
+                account.setRoleType(AccountModel.RoleType.values()[rs.getInt("role")]);
+                account.setUname(rs.getString("uname"));
+                return account;
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public Boolean createUser(String username, String password, AccountModel.RoleType role) {
         String query = String.format("INSERT INTO brs2021_users(uname,passwd,role) VALUES (\"%s\",\"%s\",%d)", username, encryptedPassword(password), role.ordinal());
         try {
@@ -37,7 +57,7 @@ public class AccountHelper {
             }
         } catch (SQLException se) {
             se.printStackTrace();
-            DialogController.showExceptionDialog(se, null);
+            DialogController.showErrorDialog(null, se.toString());
         }
         return false;
     }
@@ -52,7 +72,7 @@ public class AccountHelper {
             }
         } catch (SQLException se) {
             System.out.println("Error edit Account: " + se);
-            DialogController.showExceptionDialog(se, null);
+            DialogController.showErrorDialog(null, se.toString());
         }
         return false;
     }
@@ -67,14 +87,25 @@ public class AccountHelper {
             }
         } catch (SQLException se) {
             System.out.println("Error delete Account: " + se);
-            DialogController.showExceptionDialog(se, null);
+            DialogController.showErrorDialog(null, se.toString());
         }
         return false;
     }
 
-    public List<AccountModel> getAccounts() {
+    public List<AccountModel> getAccounts(AccountModel.RoleType ownerType) {
+        String condition = "";
+        switch (ownerType) {
+            case CUSTOMER:
+                return null;
+            case ADMIN:
+                condition = " WHERE role > 0;";
+                break;
+            case ACCOUNT_MANAGER:
+                condition = " WHERE role > 1;";
+                break;
+        }
         List<AccountModel> accounts = new ArrayList<>();
-        String query = "SELECT * FROM brs2021_users WHERE role != 0;";
+        String query = "SELECT * FROM brs2021_users" + condition;
         try {
             Statement statement = connect.getConnection().createStatement();
             ResultSet resultSet = statement.executeQuery(query);
@@ -90,7 +121,7 @@ public class AccountHelper {
             }
         } catch (SQLException se) {
             System.out.println("Error fetching Accounts: " + se);
-            DialogController.showExceptionDialog(se, null);
+            DialogController.showErrorDialog(null, se.toString());
         }
         return accounts; // return arraylist
     }
@@ -105,7 +136,7 @@ public class AccountHelper {
             }
         } catch (SQLException se) {
             se.printStackTrace();
-            DialogController.showExceptionDialog(se, null);
+            DialogController.showErrorDialog(null, se.toString());
         }
     }
 }

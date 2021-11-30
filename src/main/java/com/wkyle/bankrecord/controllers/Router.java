@@ -30,6 +30,18 @@ public class Router {
         }
     }
 
+    public static void goToAccountManagerView() {
+        try {
+            AnchorPane root;
+            root = (AnchorPane) FXMLLoader.load(Router.class.getResource("/com/wkyle/bankrecord/AccountManager.fxml"));
+            Main.stage.setTitle("AccountManger View");
+            Scene scene = new Scene(root);
+            Main.stage.setScene(scene);
+        } catch (Exception e) {
+            System.out.println("Error occured while inflating view: " + e);
+        }
+    }
+
     public static void goToClientView(int cid) {
         try {
             AnchorPane root;

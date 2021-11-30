@@ -2,17 +2,11 @@ package com.wkyle.bankrecord.controllers;
 
 import java.net.URL;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.function.Function;
 
 import com.wkyle.bankrecord.Dao.DBConnect;
-import com.wkyle.bankrecord.models.AccountHelper;
-import com.wkyle.bankrecord.models.AccountModel;
-import com.wkyle.bankrecord.models.ClientModel;
-import com.wkyle.bankrecord.models.LoginModel;
+import com.wkyle.bankrecord.models.*;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -40,6 +34,14 @@ public class AdminController implements Initializable {
 	private TextField txtName;
 	@FXML
 	private TextField txtAddress;
+
+	@FXML
+	private TextField recordIDTF;
+	@FXML
+	private TextField recordBalanceTF;
+	@FXML
+	private TextField deleteTidTF;
+
 
 	@FXML
 	private TableView<AccountModel> tblAccounts;
@@ -116,12 +118,31 @@ public class AdminController implements Initializable {
 
 	public void submitUpdate() {
 		System.out.println("Update Submit button pressed");
-
+		String recordID = recordIDTF.getText();
+		String recordBalance = recordBalanceTF.getText();
+		if (recordID == null || recordID.isEmpty() || recordBalance == null || recordBalance.isEmpty()) {
+			DialogController.showErrorDialog("Input invalid", "Please check and re-enter.");
+		} else {
+			try {
+				RecordHelper.getInstance().updateRecord(Integer.parseInt(recordID), Double.parseDouble(recordBalance));
+			} catch (NumberFormatException e) {
+				DialogController.showErrorDialog("Input invalid", e.toString());
+			}
+		}
 	}
 
 	public void submitDelete() {
 		System.out.println("Delete Submit button pressed");
-
+		String tid = deleteTidTF.getText();
+		if (tid == null || tid.isEmpty()) {
+			DialogController.showErrorDialog("Input invalid", "Please check and re-enter.");
+		} else {
+			try {
+				RecordHelper.getInstance().deleteRecord(Integer.parseInt(tid));
+			} catch (NumberFormatException e) {
+				DialogController.showErrorDialog("Input invalid", e.toString());
+			}
+		}
 	}
 
 	public void logout() {
@@ -143,9 +164,16 @@ public class AdminController implements Initializable {
 
 	public void editAccount() {
 		AccountModel model = tblAccounts.getSelectionModel().getSelectedItem();
+		if (model == null) {
+			return;
+		}
 		DialogController.accountInfoInputDialog("Edit Account", model, new Function<AccountModel, AccountModel>() {
 			@Override
 			public AccountModel apply(AccountModel accountModel) {
+				if (!Objects.equals(accountModel.getPasswdEncrypted(), model.getPasswdEncrypted())) {
+					// passwd changed, need re encrypt
+					accountModel.setPasswdEncrypted(AccountHelper.getInstance().encryptedPassword(accountModel.getPasswdEncrypted()));
+				}
 				Boolean flag = AccountHelper.getInstance().editAccount(accountModel);
 				if (flag) {
 					Platform.runLater(() -> updateTable());
@@ -179,6 +207,6 @@ public class AdminController implements Initializable {
 	}
 
 	private void updateTable() {
-		tblAccounts.getItems().setAll(AccountHelper.getInstance().getAccounts());
+		tblAccounts.getItems().setAll(AccountHelper.getInstance().getAccounts(AccountModel.RoleType.ADMIN));
 	}
 }

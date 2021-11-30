@@ -9,20 +9,14 @@ import com.wkyle.bankrecord.Dao.DBConnect;
 
 public class LoginModel extends DBConnect {
 
-	private Boolean admin;
-	private int id;
- 
+	private AccountModel account = new AccountModel();
+	public AccountModel getAccount() { return this.account; }
+
 	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
+		return account.getCid();
 	}
 	public Boolean isAdmin() {
-		return admin;
-	}
-	public void setAdmin(Boolean admin) {
-		this.admin = admin;
+		return account.getRoleType() == AccountModel.RoleType.ADMIN;
 	}
 
 	public void setupSQLTable() {
@@ -60,15 +54,17 @@ public class LoginModel extends DBConnect {
 	}
 
 	public Boolean getCredentials(String username, String password){
+
 		String query = "SELECT * FROM brs2021_users WHERE uname = ? and passwd = ?;";
 		try(PreparedStatement stmt = connection.prepareStatement(query)) {
 		   stmt.setString(1, username);
-		   stmt.setString(2, password);
+		   stmt.setString(2, AccountHelper.getInstance().encryptedPassword(password));
 		   ResultSet rs = stmt.executeQuery();
 			if(rs.next()) {
-
-				setId(rs.getInt("id"));
-				setAdmin(rs.getInt("role") == 0);
+				account.setCid(rs.getInt("id"));
+				account.setPasswdEncrypted(rs.getString("passwd"));
+				account.setRoleType(AccountModel.RoleType.values()[rs.getInt("role")]);
+				account.setUname(rs.getString("uname"));
 				return true;
 			}
 		 }catch (SQLException e) {

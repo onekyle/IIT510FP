@@ -76,12 +76,14 @@ public class LoginController {
 	public void checkCredentials(String username, String password) {
 		Boolean isValid = model.getCredentials(username, password);
 		if (!isValid) {
-			lblError.setText("User does not exist!");
+			lblError.setText("User account password is incorrect or User does not exist!");
 			return;
 		}
-		if (model.isAdmin() && isValid) {
+		if (model.isAdmin()) {
 			// If user is admin, inflate admin view
 			Router.goToAdminView();
+		} else if (model.getAccount().getRoleType() == AccountModel.RoleType.ACCOUNT_MANAGER) {
+			Router.goToAccountManagerView();
 		} else {
 			// If user is customer, inflate customer view
 			Router.goToClientView(model.getId());
