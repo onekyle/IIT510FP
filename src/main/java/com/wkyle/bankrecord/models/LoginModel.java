@@ -54,7 +54,7 @@ public class LoginModel extends DBConnect {
 //			stmt.executeUpdate(alter);
 			stmt.executeUpdate(createTransactionRecordsTable);
 			stmt.executeUpdate(createBankTable);
-		} catch (SQLException se) {
+		} catch (Exception se) {
 			se.printStackTrace();
 		}
 	}

@@ -167,7 +167,7 @@ public class AccountHelper {
             if (rs.next()) {
                 ResultSetPrinter.printResultSet(rs);
             }
-        } catch (SQLException se) {
+        } catch (Exception se) {
             se.printStackTrace();
             DialogController.showErrorDialog(null, se.toString());
         }
