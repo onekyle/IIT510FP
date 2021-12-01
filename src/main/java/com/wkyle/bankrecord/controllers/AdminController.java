@@ -1,24 +1,16 @@
 package com.wkyle.bankrecord.controllers;
 
 import java.net.URL;
-import java.sql.*;
 import java.util.*;
 import java.util.function.Function;
 
-import com.wkyle.bankrecord.Dao.DBConnect;
 import com.wkyle.bankrecord.models.*;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.util.Pair;
 
 public class AdminController implements Initializable {
 
@@ -52,8 +44,9 @@ public class AdminController implements Initializable {
 	@FXML
 	private TableColumn<AccountModel, String> roleType;
 	// Declare DB objects
-	DBConnect conn = null;
-	Statement stmt = null;
+//	DBConnect conn = null;
+//	Statement stmt = null;
+	AdminModel adminModel=null;
 
 	public void initialize(URL location, ResourceBundle resources) {
 		accountID.setCellValueFactory(new PropertyValueFactory<AccountModel, String>("cid"));
@@ -63,7 +56,7 @@ public class AdminController implements Initializable {
 	}
 
 	public AdminController() {
-		conn = new DBConnect();
+		adminModel=new AdminModel();
 	}
 
 	public void viewAccounts() {
@@ -97,23 +90,11 @@ public class AdminController implements Initializable {
 	public void submitBank() {
 
 		// INSERT INTO BANK TABLE
-		try {
-			// Execute a query
-			System.out.println("Inserting records into the table...");
-			stmt = conn.getConnection().createStatement();
-			String sql = null;
 
-			// Include all object data to the database table
+			adminModel.createBank( txtName.getText() , txtAddress.getText());
 
-			sql = "insert into brs2021_bank(name,address) values ('" + txtName.getText() + "','" + txtAddress.getText()
-					+ "')";
-			stmt.executeUpdate(sql);
-			System.out.println("Bank Record created");
 
-			conn.getConnection().close();
-		} catch (SQLException se) {
-			se.printStackTrace();
-		}
+
 	}
 
 	public void submitUpdate() {
@@ -124,7 +105,7 @@ public class AdminController implements Initializable {
 			DialogController.showErrorDialog("Input invalid", "Please check and re-enter.");
 		} else {
 			try {
-				RecordHelper.getInstance().updateRecord(Integer.parseInt(recordID), Double.parseDouble(recordBalance));
+			 adminModel.updateBank(recordID,recordBalance);
 			} catch (NumberFormatException e) {
 				DialogController.showErrorDialog("Input invalid", e.toString());
 			}
@@ -138,7 +119,7 @@ public class AdminController implements Initializable {
 			DialogController.showErrorDialog("Input invalid", "Please check and re-enter.");
 		} else {
 			try {
-				RecordHelper.getInstance().deleteRecord(Integer.parseInt(tid));
+				adminModel.deleteBank(tid);
 			} catch (NumberFormatException e) {
 				DialogController.showErrorDialog("Input invalid", e.toString());
 			}

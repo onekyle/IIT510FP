@@ -62,7 +62,7 @@ public class ClientModel extends DBConnect {
 
 			// Include data to the database table
 
-			sql = " insert into brs2021_accounts(cid, balance) values('" + cid + "', '" + bal + "')";
+			sql = " insert into brs2021_accounts(cid, balance,create_time) values('" + cid + "', '" + bal + "','" + System.currentTimeMillis() + "')";
 
 			stmt.executeUpdate(sql);
 			conn.getConnection().close();

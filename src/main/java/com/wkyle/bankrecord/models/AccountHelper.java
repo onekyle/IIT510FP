@@ -2,12 +2,11 @@ package com.wkyle.bankrecord.models;
 
 import com.wkyle.bankrecord.Dao.DBConnect;
 import com.wkyle.bankrecord.controllers.DialogController;
+import com.wkyle.bankrecord.utils.HashSHAUtils;
 import javafx.scene.control.Dialog;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.security.NoSuchAlgorithmException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,7 +25,14 @@ public class AccountHelper {
     private DBConnect connect = null;
 
     public String encryptedPassword(String passwd) {
-        return String.valueOf(passwd.hashCode());
+
+        String encryptedPassword="";
+        try {
+            encryptedPassword= HashSHAUtils.toMD5(passwd);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return String.valueOf(encryptedPassword);
     }
 
     public AccountModel getAccount(int cid, String name) {
@@ -62,10 +68,15 @@ public class AccountHelper {
                 return false;
             }
         }
-        String query = String.format("INSERT INTO brs2021_users(uname,passwd,role) VALUES (\"%s\",\"%s\",%d)", username, encryptedPassword(password), role.ordinal());
+//        String query = String.format("INSERT INTO brs2021_users(uname,passwd,role) VALUES (\"%s\",\"%s\",%d)", username, encryptedPassword(password), role.ordinal());
         try {
-            Statement stmt = connect.getConnection().createStatement();
-            int ret =  stmt.executeUpdate(query);
+            PreparedStatement stmt = connect.getConnection().prepareStatement("INSERT INTO brs2021_users(uname,passwd,role,create_time) VALUES (?,?,?,?)");
+            stmt.setString(1, username);
+            stmt.setString(2, encryptedPassword(password));
+            stmt.setInt(3, role.ordinal());
+            Timestamp date = new Timestamp(System.currentTimeMillis());
+            stmt.setTimestamp(4, date);
+            int ret =  stmt.executeUpdate();
             if (ret == 1) {
                 return true;
             }

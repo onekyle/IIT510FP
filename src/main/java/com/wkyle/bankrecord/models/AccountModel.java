@@ -53,8 +53,12 @@ public class AccountModel {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         AccountModel that = (AccountModel) o;
         return cid == that.cid && Objects.equals(uname, that.uname) && Objects.equals(passwdEncrypted, that.passwdEncrypted) && roleType == that.roleType && Objects.equals(roleTypeString, that.roleTypeString);
     }
