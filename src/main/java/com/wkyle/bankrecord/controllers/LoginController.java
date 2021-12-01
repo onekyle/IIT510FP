@@ -28,7 +28,7 @@ public class LoginController {
 	public LoginController() {
 		model = LoginModel.getInstance();
 		model.setupSQLTable();
-		model.setupSQL();
+//		model.setupSQL();
 	}
 
 	public void login() {
@@ -43,8 +43,6 @@ public class LoginController {
 	}
 
 	public void signup() {
-//		model.createUser("admin","admin", LoginModel.RoleType.ADMIN);
-		AccountHelper.getInstance().logAllUsers();
 		String username = this.txtUsername.getText();
 		String password = this.txtPassword.getText();
 		if (checkInputUserNameAndPassword(username, password)) {
