@@ -18,7 +18,7 @@ public class HashSHAUtils {
         }
 
 //        System.out.println("Hash password created => " + sbHash.toString());
-        System.out.println(sbHash.toString().length());
+//        System.out.println(sbHash.toString().length());
         return sbHash.toString();
     }
 

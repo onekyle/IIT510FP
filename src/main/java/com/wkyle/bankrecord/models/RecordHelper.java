@@ -3,9 +3,7 @@ package com.wkyle.bankrecord.models;
 import com.wkyle.bankrecord.Dao.DBConnect;
 import com.wkyle.bankrecord.controllers.DialogController;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class RecordHelper {
 
@@ -59,10 +57,16 @@ public class RecordHelper {
             DialogController.showErrorDialog("Update Record Failed", "");
             return false;
         }
-        String query = String.format("INSERT INTO brs2021_accounts(cid,balance) VALUES (%d,%f)", cid, balance);
+//        String query = String.format("INSERT INTO brs2021_accounts(cid,balance) VALUES (%d,%f)", cid, balance);
+//        String query = ("INSERT INTO brs2021_accounts(cid,balance,create_time) VALUES ('"+cid+"','"+balance+"','"+System.currentTimeMillis()+"')");
+
         try {
-            Statement stmt = connect.getConnection().createStatement();
-            int ret =  stmt.executeUpdate(query);
+            PreparedStatement stmt = connect.getConnection().prepareStatement("INSERT INTO brs2021_accounts(cid,balance,create_time) VALUES (?,?,?)");
+            stmt.setInt(1, cid);
+            stmt.setDouble(2, balance);
+            Timestamp date = new Timestamp(System.currentTimeMillis());
+            stmt.setTimestamp(3, date);
+            int ret =  stmt.executeUpdate();
             if (ret == 1) {
                 return true;
             }

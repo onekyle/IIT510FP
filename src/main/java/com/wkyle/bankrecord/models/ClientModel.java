@@ -1,9 +1,6 @@
 package com.wkyle.bankrecord.models;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
  
@@ -62,7 +59,13 @@ public class ClientModel extends DBConnect {
 
 			// Include data to the database table
 
-			sql = " insert into brs2021_accounts(cid, balance,create_time) values('" + cid + "', '" + bal + "','" + System.currentTimeMillis() + "')";
+//			sql = " insert into brs2021_accounts(cid, balance,create_time) values('" + cid + "', '" + bal + "','" + System.currentTimeMillis() + "')";
+
+			PreparedStatement stmt = conn.getConnection().prepareStatement("insert into brs2021_accounts(cid, balance,create_time) values(?,?,?)");
+			stmt.setInt(1, cid);
+			stmt.setDouble(2, bal);
+			Timestamp date = new Timestamp(System.currentTimeMillis());
+			stmt.setTimestamp(3, date);
 
 			stmt.executeUpdate(sql);
 			conn.getConnection().close();
