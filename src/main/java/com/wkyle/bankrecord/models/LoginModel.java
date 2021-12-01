@@ -7,6 +7,12 @@ import com.wkyle.bankrecord.utils.HashSHAUtils;
 
 public class LoginModel extends DBConnect {
 
+	private static LoginModel instance = new LoginModel();
+	private LoginModel(){
+	}
+	public static LoginModel getInstance(){
+		return instance;
+	}
 	private AccountModel account = new AccountModel();
 	public AccountModel getAccount() { return this.account; }
 
@@ -100,5 +106,9 @@ public class LoginModel extends DBConnect {
 		 }
 		return false;
     }
+
+	public void logout() {
+		this.account = new AccountModel();
+	}
 
 }//end class

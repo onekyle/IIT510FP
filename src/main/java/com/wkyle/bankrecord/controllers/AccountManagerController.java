@@ -3,6 +3,7 @@ package com.wkyle.bankrecord.controllers;
 import com.wkyle.bankrecord.Dao.DBConnect;
 import com.wkyle.bankrecord.models.AccountHelper;
 import com.wkyle.bankrecord.models.AccountModel;
+import com.wkyle.bankrecord.models.LoginModel;
 import com.wkyle.bankrecord.models.RecordHelper;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -105,11 +106,12 @@ public class AccountManagerController implements Initializable {
     }
 
     public void logout() {
+        LoginModel.getInstance().logout();
         Router.goToLoginView();
     }
 
     public void addAccount() {
-        DialogController.accountInfoInputDialog("Add Account", null, new Function<AccountModel, AccountModel>() {
+        DialogController.accountInfoInputDialog("Add Account", LoginModel.getInstance().getAccount(), null, new Function<AccountModel, AccountModel>() {
             @Override
             public AccountModel apply(AccountModel accountModel) {
                 Boolean flag = AccountHelper.getInstance().createUser(accountModel.getUname(), accountModel.getPasswdEncrypted(), accountModel.getRoleType());
@@ -126,7 +128,7 @@ public class AccountManagerController implements Initializable {
         if (model == null) {
             return;
         }
-        DialogController.accountInfoInputDialog("Edit Account", model, new Function<AccountModel, AccountModel>() {
+        DialogController.accountInfoInputDialog("Edit Account", LoginModel.getInstance().getAccount(), model, new Function<AccountModel, AccountModel>() {
             @Override
             public AccountModel apply(AccountModel accountModel) {
                 Boolean flag = AccountHelper.getInstance().editAccount(accountModel, model);

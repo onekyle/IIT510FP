@@ -26,7 +26,7 @@ public class LoginController {
 	private LoginModel model;
 
 	public LoginController() {
-		model = new LoginModel();
+		model = LoginModel.getInstance();
 		model.setupSQLTable();
 		model.setupSQL();
 	}

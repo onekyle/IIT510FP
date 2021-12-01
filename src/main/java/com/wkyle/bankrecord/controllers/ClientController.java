@@ -8,6 +8,7 @@ import java.util.function.Function;
 
 import com.wkyle.bankrecord.application.Main;
 import com.wkyle.bankrecord.models.AccountModel;
+import com.wkyle.bankrecord.models.LoginModel;
 import com.wkyle.bankrecord.models.RecordHelper;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -78,6 +79,7 @@ public class ClientController implements Initializable {
 	/***** End TABLEVIEW intel *********************************************************************/
 
 	public void logout() {
+		LoginModel.getInstance().logout();
 		Router.goToLoginView();
 	}
 

@@ -18,12 +18,12 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>16</version>
+            <version>17.0.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>16</version>
+            <version>17.0.0.1</version>
         </dependency>
 
         <dependency>
@@ -61,7 +61,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.wkyle.bankrecord/com.wkyle.bankrecord.HelloApplication</mainClass>
+                            <mainClass>com.wkyle.bankrecord.application/com.wkyle.bankrecord.application.Main</mainClass>
                         </configuration>
                     </execution>
                 </executions>

@@ -49,7 +49,7 @@ public class DialogController {
         return dialog;
     }
 
-    public static Dialog<AccountModel> accountInfoInputDialog(String title, AccountModel placeHolder, Function<AccountModel, AccountModel> callback) {
+    public static Dialog<AccountModel> accountInfoInputDialog(String title, AccountModel creater, AccountModel placeHolder, Function<AccountModel, AccountModel> callback) {
         // Create the custom dialog.
         Dialog<AccountModel> dialog = new Dialog<>();
         dialog.setTitle(title == null ? "Add Account" : title);
@@ -70,7 +70,10 @@ public class DialogController {
         password.setPromptText("Password");
         List<String> choices = new ArrayList<>();
         choices.add("CUSTOMER");
-        choices.add("ACCOUNT_MANAGER");
+        if (creater.getRoleType() == AccountModel.RoleType.ADMIN) {
+            // only admin can add account manager.
+            choices.add("ACCOUNT_MANAGER");
+        }
         ChoiceBox cb = new ChoiceBox(FXCollections.observableArrayList(choices));
 
         grid.add(new Label("Username:"), 0, 0);
@@ -84,6 +87,8 @@ public class DialogController {
             username.setText(placeHolder.getUname());
             password.setText(placeHolder.getPasswdEncrypted());
             cb.setValue(placeHolder.getRoleTypeString());
+        } else {
+            cb.setValue(AccountModel.RoleType.CUSTOMER.name());
         }
 
         // Enable/Disable login button depending on whether a username was entered.
