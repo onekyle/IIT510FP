@@ -30,3 +30,16 @@ bin/
 /.idea/
 /.settings/
 /bin/
+/target/
+BankRecord.iml
+*.iml
+.idea/
+target/
+.classpath
+.project
+.settings
+.DS_Store
+build/
+*/out/
+.gradle/
+

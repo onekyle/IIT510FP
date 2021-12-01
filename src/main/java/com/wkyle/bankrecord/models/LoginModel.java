@@ -28,8 +28,8 @@ public class LoginModel extends DBConnect {
 				" passwd VARCHAR(255)," +
 				" role int, " +
 				"create_time datetime,"+
-				" PRIMARY KEY ( id ))," +
-				"UNIQUE (uname)";
+				" PRIMARY KEY ( id )," +
+				"UNIQUE (uname))";
 
 //		String alter = "ALTER TABLE Persons\n" +
 //				"ADD UNIQUE (uname);";
