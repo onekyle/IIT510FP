@@ -1,11 +1,9 @@
 package com.wkyle.bankrecord.models;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 import com.wkyle.bankrecord.Dao.DBConnect;
+import com.wkyle.bankrecord.utils.HashSHAUtils;
 
 public class LoginModel extends DBConnect {
 
@@ -22,7 +20,7 @@ public class LoginModel extends DBConnect {
 	public void setupSQLTable() {
 //		String dropTable = "DROP TABLE brs2021_users ;";
 
-		String createUsersSql = "CREATE TABLE IF NOT EXISTS brs2021_users " +
+		String createUsersTable = "CREATE TABLE IF NOT EXISTS brs2021_users " +
 				"(id INTEGER not NULL AUTO_INCREMENT, " +
 				" uname VARCHAR(255), " +
 				" passwd VARCHAR(255)," +
@@ -30,6 +28,7 @@ public class LoginModel extends DBConnect {
 				"create_time datetime,"+
 				" PRIMARY KEY ( id )," +
 				"UNIQUE (uname))";
+
 
 //		String alter = "ALTER TABLE Persons\n" +
 //				"ADD UNIQUE (uname);";
@@ -50,10 +49,33 @@ public class LoginModel extends DBConnect {
 		try {
 			Statement stmt = connection.createStatement();
 //			stmt.executeUpdate(dropTable);
-			stmt.executeUpdate(createUsersSql);
+			stmt.executeUpdate(createUsersTable);
 //			stmt.executeUpdate(alter);
 			stmt.executeUpdate(createTransactionRecordsTable);
 			stmt.executeUpdate(createBankTable);
+		} catch (Exception se) {
+			se.printStackTrace();
+		}
+	}
+
+	public void setupSQL() {
+//		String dropTable = "DROP TABLE brs2021_users ;";
+
+		String createUserSql = "insert into brs2021_users( uname, passwd, role, create_time) values(?,?,?,?)";
+
+		try {
+			PreparedStatement stmt = connection.prepareStatement(createUserSql);
+			stmt.setString(1,"admin");
+			stmt.setString(2,   HashSHAUtils.toMD5("123456"));
+			stmt.setInt(3,0);
+			stmt.setTimestamp(4,new Timestamp(System.currentTimeMillis()));
+			stmt.executeUpdate();
+			stmt.setString(1,"manage");
+			stmt.setString(2,   HashSHAUtils.toMD5("123456"));
+			stmt.setInt(3,1);
+			stmt.setTimestamp(4,new Timestamp(System.currentTimeMillis()));
+			stmt.executeUpdate();
+
 		} catch (Exception se) {
 			se.printStackTrace();
 		}

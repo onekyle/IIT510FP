@@ -28,6 +28,7 @@ public class LoginController {
 	public LoginController() {
 		model = new LoginModel();
 		model.setupSQLTable();
+		model.setupSQL();
 	}
 
 	public void login() {
