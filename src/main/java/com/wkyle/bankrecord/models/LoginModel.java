@@ -67,7 +67,7 @@ public class LoginModel extends DBConnect {
 	public void setupSQL() {
 //		String dropTable = "DROP TABLE brs2021_users ;";
 
-		String createUserSql = "insert into brs2021_users( uname, passwd, role, create_time) values(?,?,?,?)";
+		String createUserSql = "replace into brs2021_users( uname, passwd, role, create_time) values(?,?,?,?)";
 
 		try {
 			PreparedStatement stmt = connection.prepareStatement(createUserSql);
