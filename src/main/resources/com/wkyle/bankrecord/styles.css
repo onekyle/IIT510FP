@@ -10,7 +10,6 @@
     -fx-background-color: darkturquoise;
 }
 
-/*hover伪类选择器设置鼠标移过Button时的背景色*/
 .button:hover {
     -fx-background-color: lightskyblue;
 }
@@ -31,9 +30,6 @@
     -fx-text-fill: #fefefe;
 }
 
-/*.highlightedRow {*/
-/*    -fx-background-color: brown;*/
-/*    -fx-background-insets: 0, 1, 2;*/
-/*    -fx-background: -fx-accent;*/
-/*    -fx-text-fill: -fx-selection-bar-text;*/
-/*}*/
+.ct-inner-lbl {
+    -fx-text-fill: #fefefe;
+}
