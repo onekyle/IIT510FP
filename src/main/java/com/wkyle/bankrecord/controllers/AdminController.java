@@ -43,9 +43,7 @@ public class AdminController implements Initializable {
 	private TableColumn<AccountModel, String> accountName;
 	@FXML
 	private TableColumn<AccountModel, String> roleType;
-	// Declare DB objects
-//	DBConnect conn = null;
-//	Statement stmt = null;
+
 	AdminModel adminModel=null;
 
 	public void initialize(URL location, ResourceBundle resources) {
@@ -53,6 +51,7 @@ public class AdminController implements Initializable {
 		accountName.setCellValueFactory(new PropertyValueFactory<AccountModel, String>("uname"));
 		roleType.setCellValueFactory(new PropertyValueFactory<AccountModel, String>("roleTypeString"));
 		updateTable();
+		viewAccounts();
 	}
 
 	public AdminController() {
@@ -88,13 +87,7 @@ public class AdminController implements Initializable {
 	}
 
 	public void submitBank() {
-
-		// INSERT INTO BANK TABLE
-
-			adminModel.createBank( txtName.getText() , txtAddress.getText());
-
-
-
+		adminModel.createBank( txtName.getText() , txtAddress.getText());
 	}
 
 	public void submitUpdate() {

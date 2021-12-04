@@ -2,19 +2,26 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="400.0" maxWidth="600.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: bbbdbd;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.wkyle.bankrecord.controllers.AccountManagerController">
+<AnchorPane maxHeight="400.0" maxWidth="600.0" prefHeight="400.0" prefWidth="600.0" styleClass="root-pane" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.wkyle.bankrecord.controllers.AccountManagerController">
     <children>
-        <Label layoutX="42.0" layoutY="40.0" text="AccountManager Panel" textFill="#194321">
+      <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" x="450.0" y="10.0">
+         <image>
+            <Image url="@imgs/logo.png" />
+         </image>
+      </ImageView>
+        <Label fx:id="userLbl" layoutX="42.0" layoutY="20.0" styleClass="user-label" text="AccountManager Panel">
             <font>
                 <Font size="17.0" />
             </font></Label>
-        <Button layoutX="36.0" layoutY="114.0" mnemonicParsing="false" onAction="#viewAccounts" text="View Accounts" />
-        <Button layoutX="36.0" layoutY="173.0" mnemonicParsing="false" onAction="#updateRec" text="Update Record" />
-        <Button layoutX="36.0" layoutY="230.0" mnemonicParsing="false" onAction="#deleteRec" text="Delete Record" />
-        <Pane fx:id="pane1" layoutX="176.0" layoutY="65.0" prefHeight="282.0" prefWidth="375.0" style="-fx-border-color: Black; -fx-border-width: 1;" visible="false">
+        <Button layoutX="36.0" layoutY="75.0" mnemonicParsing="false" onAction="#viewAccounts" text="View Accounts" />
+        <Button layoutX="36.0" layoutY="134.0" mnemonicParsing="false" onAction="#updateRec" text="Update Record" />
+        <Button layoutX="36.0" layoutY="191.0" mnemonicParsing="false" onAction="#deleteRec" text="Delete Record" />
+        <Button layoutX="36.0" layoutY="320.0" mnemonicParsing="false" onAction="#logout" prefHeight="27.0" prefWidth="96.0" styleClass="destroy-button" text="Logout" />
+        <Pane fx:id="pane1" layoutX="176.0" layoutY="75.0" prefHeight="282.0" prefWidth="375.0" style="-fx-border-color: Black; -fx-border-width: 1;" visible="false">
             <effect>
                 <Glow level="0.0" />
             </effect>
@@ -24,10 +31,10 @@
                 <TextField fx:id="recordIDTF" layoutX="104.0" layoutY="48.0" />
                 <Label layoutX="109.0" layoutY="22.0" text="Enter desired ID" />
                 <Label layoutX="109.0" layoutY="109.0" text="Enter new balance" />
-                <Label layoutX="14.0" layoutY="234.0" text="Record Updated?" textFill="#803131" />
+<!--                <Label layoutX="14.0" layoutY="234.0" text="Record Updated?" textFill="#803131" />-->
             </children>
         </Pane>
-        <Pane fx:id="pane2" layoutX="176.0" layoutY="65.0" prefHeight="282.0" prefWidth="375.0" style="-fx-border-color: Blue; -fx-border-width: 1;" visible="false">
+        <Pane fx:id="pane2" layoutX="176.0" layoutY="75.0" prefHeight="282.0" prefWidth="375.0" style="-fx-border-color: Blue; -fx-border-width: 1;" visible="false">
             <effect>
                 <Glow level="0.0" />
             </effect>
@@ -35,10 +42,10 @@
                 <Button layoutX="145.0" layoutY="171.0" mnemonicParsing="false" onAction="#submitDelete" text="Submit" />
                 <TextField fx:id="deleteTidTF" layoutX="105.0" layoutY="93.0" />
                 <Label layoutX="109.0" layoutY="55.0" text="Enter desired ID" />
-                <Label layoutX="14.0" layoutY="176.0" text="Record Deleted?" textFill="#803131" />
+<!--                <Label layoutX="14.0" layoutY="176.0" text="Record Deleted?" textFill="#803131" />-->
             </children>
         </Pane>
-        <Pane fx:id="paneAccounts" layoutX="176.0" layoutY="65.0" prefHeight="282.0" prefWidth="375.0">
+        <Pane fx:id="paneAccounts" layoutX="176.0" layoutY="75.0" prefHeight="282.0" prefWidth="375.0">
             <children>
                 <TableView fx:id="tblAccounts" prefHeight="217.0" prefWidth="375.0">
                     <columns>
@@ -51,11 +58,10 @@
                     <children>
                         <Button mnemonicParsing="false" onAction="#addAccount" prefWidth="60.0" text="Add" />
                         <Button mnemonicParsing="false" onAction="#editAccount" prefWidth="60.0" text="Edit" />
-                        <Button mnemonicParsing="false" onAction="#deleteAccount" prefWidth="60.0" text="Delete" />
+                        <Button mnemonicParsing="false" onAction="#deleteAccount" prefWidth="60.0" styleClass="destroy-button" text="Delete" />
                     </children>
                 </FlowPane>
             </children>
         </Pane>
-        <Button layoutX="36.0" layoutY="283.0" mnemonicParsing="false" onAction="#logout" prefHeight="27.0" prefWidth="96.0" text="Logout" />
     </children>
 </AnchorPane>

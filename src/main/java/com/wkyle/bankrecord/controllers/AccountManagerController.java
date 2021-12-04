@@ -29,6 +29,8 @@ public class AccountManagerController implements Initializable {
     private Pane paneAccounts;
 
     @FXML
+    private Label userLbl;
+    @FXML
     private TextField recordIDTF;
     @FXML
     private TextField recordBalanceTF;
@@ -47,10 +49,13 @@ public class AccountManagerController implements Initializable {
     Statement stmt = null;
 
     public void initialize(URL location, ResourceBundle resources) {
+        AccountModel current = LoginModel.getInstance().getAccount();
+        userLbl.setText(String.format("Welcome %s, id: %d", current.getUname(), current.getCid()));
         accountID.setCellValueFactory(new PropertyValueFactory<AccountModel, String>("cid"));
         accountName.setCellValueFactory(new PropertyValueFactory<AccountModel, String>("uname"));
         roleType.setCellValueFactory(new PropertyValueFactory<AccountModel, String>("roleTypeString"));
         updateTable();
+        viewAccounts();
     }
 
     public AccountManagerController() {

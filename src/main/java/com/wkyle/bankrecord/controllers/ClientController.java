@@ -41,7 +41,13 @@ public class ClientController implements Initializable {
 	@FXML
 	private TableColumn<ClientModel, String> balance;
 
+	@FXML
+	private Label userLbl;
+
 	public void initialize(URL location, ResourceBundle resources) {
+		AccountModel current = LoginModel.getInstance().getAccount();
+		userLbl.setText(String.format("Welcome %s, id: %d", current.getUname(), current.getCid()));
+
 		tid.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("tid"));
 		balance.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("balance"));
 
@@ -51,6 +57,7 @@ public class ClientController implements Initializable {
 			@Override
 			public void run() {
 				customResize(tblAccounts);
+				tblAccounts.setVisible(true);
 			}
 		});
 		tblAccounts.setVisible(false);

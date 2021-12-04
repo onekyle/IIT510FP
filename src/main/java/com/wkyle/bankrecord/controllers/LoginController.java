@@ -20,20 +20,14 @@ public class LoginController {
 	@FXML
 	private PasswordField txtPassword;
 
-	@FXML
-	private Label lblError;
-
 	private LoginModel model;
 
 	public LoginController() {
 		model = LoginModel.getInstance();
 		model.setupSQLTable();
-//		model.setupSQL();
 	}
 
 	public void login() {
-
-//		model.logAllUsers();
 		String username = this.txtUsername.getText();
 		String password = this.txtPassword.getText();
 		if (checkInputUserNameAndPassword(username, password)) {
@@ -54,19 +48,17 @@ public class LoginController {
 	}
 
 	public boolean checkInputUserNameAndPassword(String username, String password) {
-		lblError.setText("");
-
 		// Validations
 		if (username == null || username.trim().equals("")) {
-			lblError.setText("Username Cannot be empty or spaces");
+			DialogController.showErrorDialog("Error", "Username Cannot be empty or spaces");
 			return false;
 		}
 		if (password == null || password.trim().equals("")) {
-			lblError.setText("Password Cannot be empty or spaces");
+			DialogController.showErrorDialog("Error", "Password Cannot be empty or spaces");
 			return false;
 		}
 		if (username == null || username.trim().equals("") && (password == null || password.trim().equals(""))) {
-			lblError.setText("User name / Password Cannot be empty or spaces");
+			DialogController.showErrorDialog("Error", "User name / Password Cannot be empty or spaces");
 			return false;
 		}
 		return true;
@@ -75,7 +67,7 @@ public class LoginController {
 	public void checkCredentials(String username, String password) {
 		Boolean isValid = model.getCredentials(username, password);
 		if (!isValid) {
-			lblError.setText("User account password is incorrect or User does not exist!");
+			DialogController.showErrorDialog("Error", "User account password is incorrect or User does not exist!");
 			return;
 		}
 		if (model.isAdmin()) {

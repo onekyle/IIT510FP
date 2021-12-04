@@ -1,21 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="400.0" maxWidth="600.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: bbbdbd;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.wkyle.bankrecord.controllers.ClientController">
+<AnchorPane maxHeight="400.0" maxWidth="550.0" prefHeight="400.0" prefWidth="600.0" styleClass="root-pane" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.wkyle.bankrecord.controllers.ClientController">
    <children>
-      <Button layoutX="54.0" layoutY="73.0" mnemonicParsing="false" onAction="#viewAccounts" text="View Accounts" />
+      <Label fx:id="userLbl" layoutX="34.0" layoutY="20.0" styleClass="user-label" text="Hero">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+       <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" x="430.0" y="15.0">
+           <image>
+               <Image url="@imgs/logo.png" />
+           </image>
+       </ImageView>
+      <Button layoutX="34.0" layoutY="73.0" mnemonicParsing="false" onAction="#viewAccounts" text="View Accounts" />
       <Button layoutX="325.0" layoutY="73.0" mnemonicParsing="false" onAction="#createTransaction" prefHeight="27.0" text="Create Transactions" visible="false" AnchorPane.rightAnchor="90.0" />
-      <Button layoutX="54.0" layoutY="337.0" mnemonicParsing="false" onAction="#logout" prefHeight="27.0" prefWidth="70.0" text="Logout" />
-      <TableView fx:id="tblAccounts" layoutX="223.0" layoutY="72.0" prefHeight="266.0" prefWidth="348.0">
+      <Button layoutX="34.0" layoutY="337.0" mnemonicParsing="false" onAction="#logout" prefHeight="27.0" prefWidth="70.0" styleClass="destroy-button" text="Logout" />
+      <TableView fx:id="tblAccounts" layoutX="183.0" layoutY="72.0" prefHeight="266.0" prefWidth="348.0">
         <columns>
           <TableColumn fx:id="tid" prefWidth="50.0" text="tid" />
           <TableColumn fx:id="balance" prefWidth="156.0" text="balance" />
         </columns>
       </TableView>
-      <Button layoutX="52.0" layoutY="139.0" mnemonicParsing="false" onAction="#onDeposit" text="Deposit" />
-      <Button layoutX="54.0" layoutY="205.0" mnemonicParsing="false" onAction="#onWithdraw" text="Withdraw" />
-      <Button layoutX="54.0" layoutY="271.0" mnemonicParsing="false" onAction="#onTransfer" text="Transfer" />
+      <Button layoutX="34.0" layoutY="139.0" mnemonicParsing="false" onAction="#onDeposit" text="Deposit" />
+      <Button layoutX="34.0" layoutY="205.0" mnemonicParsing="false" onAction="#onWithdraw" text="Withdraw" />
+      <Button layoutX="34.0" layoutY="271.0" mnemonicParsing="false" onAction="#onTransfer" text="Transfer" />
    </children>
 </AnchorPane>
