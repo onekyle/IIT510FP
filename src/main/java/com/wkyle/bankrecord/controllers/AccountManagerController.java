@@ -156,7 +156,7 @@ public class AccountManagerController implements Initializable {
             alert.setContentText(String.format("Delete Account: %s, role type is: %s", model.getUname(), model.getRoleTypeString()));
 
             Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK){
+            if (result.get() == ButtonType.OK) {
                 // ... user chose OK
                 Boolean flag = AccountHelper.getInstance().deleteAccount(model.getCid());
                 if (flag) {

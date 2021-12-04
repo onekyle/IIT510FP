@@ -4,23 +4,24 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DBConnect  {
+public class DBConnect {
 
-	protected Connection connection;
-	public Connection getConnection() {
-		return connection;
-	}
+    protected Connection connection;
 
-	private static String url = "jdbc:mysql://www.papademas.net:3307/510fp";
-	private static String username = "fp510";
-	private static String password = "510";
+    public Connection getConnection() {
+        return connection;
+    }
 
-	public DBConnect() {
-		try {
-			connection = DriverManager.getConnection(url, username, password);
-		} catch (SQLException e) {
-			System.out.println("Error creating connection to database: " + e);
-			System.exit(-1);
-		}
-	}
+    private static String url = "jdbc:mysql://www.papademas.net:3307/510fp";
+    private static String username = "fp510";
+    private static String password = "510";
+
+    public DBConnect() {
+        try {
+            connection = DriverManager.getConnection(url, username, password);
+        } catch (SQLException e) {
+            System.out.println("Error creating connection to database: " + e);
+            System.exit(-1);
+        }
+    }
 }

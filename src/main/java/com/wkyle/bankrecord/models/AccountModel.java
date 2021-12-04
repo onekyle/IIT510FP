@@ -8,6 +8,7 @@ public class AccountModel {
         ACCOUNT_MANAGER, // 1
         CUSTOMER, // 2
     }
+
     private int cid;
     private String uname;
     private String passwdEncrypted;

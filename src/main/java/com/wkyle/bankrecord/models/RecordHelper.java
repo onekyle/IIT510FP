@@ -8,11 +8,12 @@ import java.sql.*;
 public class RecordHelper {
 
     private static RecordHelper instance = new RecordHelper();
-    private RecordHelper(){
+
+    private RecordHelper() {
         this.connect = new DBConnect();
     }
 
-    public static RecordHelper getInstance(){
+    public static RecordHelper getInstance() {
         return instance;
     }
 
@@ -26,7 +27,7 @@ public class RecordHelper {
         String query = String.format("SELECT SUM(balance) FROM brs2021_accounts WHERE cid=%d;", cid);
         try {
             Statement stmt = connect.getConnection().createStatement();
-            ResultSet result =  stmt.executeQuery(query);
+            ResultSet result = stmt.executeQuery(query);
             if (result.next()) {
                 return result.getDouble(1);
             }
@@ -66,7 +67,7 @@ public class RecordHelper {
             stmt.setDouble(2, balance);
             Timestamp date = new Timestamp(System.currentTimeMillis());
             stmt.setTimestamp(3, date);
-            int ret =  stmt.executeUpdate();
+            int ret = stmt.executeUpdate();
             if (ret == 1) {
                 return true;
             }
@@ -81,7 +82,7 @@ public class RecordHelper {
         String query = String.format("DELETE FROM brs2021_accounts WHERE tid=%d", tid);
         try {
             Statement stmt = connect.getConnection().createStatement();
-            int ret =  stmt.executeUpdate(query);
+            int ret = stmt.executeUpdate(query);
             if (ret == 1) {
                 return true;
             } else {

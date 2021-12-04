@@ -14,11 +14,12 @@ import java.util.Objects;
 public class AccountHelper {
 
     private static AccountHelper instance = new AccountHelper();
-    private AccountHelper(){
+
+    private AccountHelper() {
         this.connect = new DBConnect();
     }
 
-    public static AccountHelper getInstance(){
+    public static AccountHelper getInstance() {
         return instance;
     }
 
@@ -26,9 +27,9 @@ public class AccountHelper {
 
     public String encryptedPassword(String passwd) {
 
-        String encryptedPassword="";
+        String encryptedPassword = "";
         try {
-            encryptedPassword= HashSHAUtils.toMD5(passwd);
+            encryptedPassword = HashSHAUtils.toMD5(passwd);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
@@ -46,7 +47,7 @@ public class AccountHelper {
         try {
             Statement stmt = connect.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(query);
-            if(rs.next()) {
+            if (rs.next()) {
                 AccountModel account = new AccountModel();
                 account.setCid(rs.getInt("id"));
                 account.setPasswdEncrypted(rs.getString("passwd"));
@@ -54,7 +55,7 @@ public class AccountHelper {
                 account.setUname(rs.getString("uname"));
                 return account;
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
@@ -62,7 +63,7 @@ public class AccountHelper {
 
     public Boolean createUser(String username, String password, AccountModel.RoleType role) {
         if (username != null && !username.isEmpty()) {
-            AccountModel existAccount = getAccount(0,username);
+            AccountModel existAccount = getAccount(0, username);
             if (existAccount != null) {
                 DialogController.showErrorDialog("User name exist", "Please try another user name");
                 return false;
@@ -76,7 +77,7 @@ public class AccountHelper {
             stmt.setInt(3, role.ordinal());
             Timestamp date = new Timestamp(System.currentTimeMillis());
             stmt.setTimestamp(4, date);
-            int ret =  stmt.executeUpdate();
+            int ret = stmt.executeUpdate();
             if (ret == 1) {
                 return true;
             }
@@ -90,7 +91,7 @@ public class AccountHelper {
     public Boolean editAccount(AccountModel newAccount, AccountModel old) {
         if (!Objects.equals(newAccount.getUname(), old.getUname())) { // user name changed
             // check whether the name is valid
-            AccountModel existAccount = getAccount(0,newAccount.getUname());
+            AccountModel existAccount = getAccount(0, newAccount.getUname());
             if (existAccount != null) {
                 DialogController.showErrorDialog("User name exist", "Please try another user name");
                 return false;

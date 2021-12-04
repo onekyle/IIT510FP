@@ -11,20 +11,20 @@ import java.net.URL;
 
 public class Main extends Application {
 
-	public static Stage stage; // set global stage object!!!
+    public static Stage stage; // set global stage object!!!
 
-	@Override
-	public void start(Stage primaryStage) {
-	
-		//primaryStage.hide();
-		stage = primaryStage;
-		Router.goToLoginView();
-		stage.show();
+    @Override
+    public void start(Stage primaryStage) {
 
-	}
+        //primaryStage.hide();
+        stage = primaryStage;
+        Router.goToLoginView();
+        stage.show();
 
-	public static void main(String[] args) {
+    }
 
-		launch(args);
-	}
+    public static void main(String[] args) {
+
+        launch(args);
+    }
 }

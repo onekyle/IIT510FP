@@ -81,7 +81,7 @@ public class DialogController {
         grid.add(new Label("Password:"), 0, 1);
         grid.add(password, 1, 1);
         grid.add(new Label("RoleType:"), 0, 2);
-        grid.add(cb, 1,2);
+        grid.add(cb, 1, 2);
 
         if (placeHolder != null) {
             username.setText(placeHolder.getUname());

@@ -28,40 +28,40 @@ import javafx.util.Pair;
 
 
 public class ClientController implements Initializable {
-	
-	static int userid;
-	ClientModel cm;
-	
-	/***** TABLEVIEW intel *********************************************************************/
 
-	@FXML
-	private TableView<ClientModel> tblAccounts;
-	@FXML
-	private TableColumn<ClientModel, String> tid;
-	@FXML
-	private TableColumn<ClientModel, String> balance;
+    static int userid;
+    ClientModel cm;
 
-	@FXML
-	private Label userLbl;
+    /***** TABLEVIEW intel *********************************************************************/
 
-	public void initialize(URL location, ResourceBundle resources) {
-		AccountModel current = LoginModel.getInstance().getAccount();
-		userLbl.setText(String.format("Welcome %s, id: %d", current.getUname(), current.getCid()));
+    @FXML
+    private TableView<ClientModel> tblAccounts;
+    @FXML
+    private TableColumn<ClientModel, String> tid;
+    @FXML
+    private TableColumn<ClientModel, String> balance;
 
-		tid.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("tid"));
-		balance.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("balance"));
+    @FXML
+    private Label userLbl;
 
-		// auto adjust width of columns depending on their content
-		tblAccounts.setColumnResizePolicy((param) -> true);
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				customResize(tblAccounts);
-				tblAccounts.setVisible(true);
-			}
-		});
-		tblAccounts.setVisible(false);
-	}
+    public void initialize(URL location, ResourceBundle resources) {
+        AccountModel current = LoginModel.getInstance().getAccount();
+        userLbl.setText(String.format("Welcome %s, id: %d", current.getUname(), current.getCid()));
+
+        tid.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("tid"));
+        balance.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("balance"));
+
+        // auto adjust width of columns depending on their content
+        tblAccounts.setColumnResizePolicy((param) -> true);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                customResize(tblAccounts);
+                tblAccounts.setVisible(true);
+            }
+        });
+        tblAccounts.setVisible(false);
+    }
 
     public void customResize(TableView<?> view) {
 
@@ -73,169 +73,169 @@ public class ClientController implements Initializable {
 
         if (tableWidth > width.get()) {
             view.getColumns().forEach(col -> {
-                col.setPrefWidth(col.getWidth()+((tableWidth-width.get())/view.getColumns().size()));
+                col.setPrefWidth(col.getWidth() + ((tableWidth - width.get()) / view.getColumns().size()));
             });
         }
     }
-    
-	public void viewAccounts() {
-		tblAccounts.getItems().setAll(cm.getAccounts(userid)); // load table data from ClientModel List
-		tblAccounts.setVisible(true); // set tableview to visible if not
-	}
 
-	/***** End TABLEVIEW intel *********************************************************************/
+    public void viewAccounts() {
+        tblAccounts.getItems().setAll(cm.getAccounts(userid)); // load table data from ClientModel List
+        tblAccounts.setVisible(true); // set tableview to visible if not
+    }
 
-	public void logout() {
-		LoginModel.getInstance().logout();
-		Router.goToLoginView();
-	}
+    /***** End TABLEVIEW intel *********************************************************************/
 
-	public void createTransaction() {
+    public void logout() {
+        LoginModel.getInstance().logout();
+        Router.goToLoginView();
+    }
 
-		TextInputDialog dialog = new TextInputDialog("Enter dollar amount");
-		dialog.setTitle("Bank Account Entry Portal");
-		dialog.setHeaderText("Enter Transaction");
-		dialog.setContentText("Please enter your balance:");
+    public void createTransaction() {
 
-		// Traditional way to get the response value.
-		Optional<String> result = dialog.showAndWait();
-		if (result.isPresent()) {
-			System.out.println("Balance entry: " + result.get());
-			cm.insertRecord(userid,Double.parseDouble(result.get()));
-		}
+        TextInputDialog dialog = new TextInputDialog("Enter dollar amount");
+        dialog.setTitle("Bank Account Entry Portal");
+        dialog.setHeaderText("Enter Transaction");
+        dialog.setContentText("Please enter your balance:");
 
-		// The Java 8 way to get the response value (with lambda expression).
-		result.ifPresent(balance -> System.out.println("Balance entry: " + balance));
+        // Traditional way to get the response value.
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            System.out.println("Balance entry: " + result.get());
+            cm.insertRecord(userid, Double.parseDouble(result.get()));
+        }
 
-	}
+        // The Java 8 way to get the response value (with lambda expression).
+        result.ifPresent(balance -> System.out.println("Balance entry: " + balance));
 
-	public void onDeposit() {
-		DialogController.showInputDialog("Deposit", null, "Please enter the amount you want to deposit:", null, new Function<String, String>() {
-			@Override
-			public String apply(String s) {
-				try {
-					double value = Double.parseDouble(s);
-					if (value <= 0) {
-						DialogController.showErrorDialog("Input invalid", "Please check and re-enter");
-					} else {
-						RecordHelper.getInstance().updateRecord(userid, value);
-						Platform.runLater(() -> viewAccounts());
-					}
-				} catch (NumberFormatException e) {
-					DialogController.showErrorDialog("Input invalid", "Please check and re-enter");
-				}
-				return s;
-			}
-		});
-	}
+    }
 
-	public void onWithdraw() {
-		DialogController.showInputDialog("Withdraw", null, "Please enter the amount you want to withdraw:", null, new Function<String, String>() {
-			@Override
-			public String apply(String s) {
-				try {
-					double value = Double.parseDouble(s);
-					RecordHelper.getInstance().withdraw(userid, value);
-					Platform.runLater(() -> viewAccounts());
-				} catch (NumberFormatException e) {
-					DialogController.showErrorDialog("Input invalid", "Please check and re-enter");
-				}
-				return s;
-			}
-		});
-	}
+    public void onDeposit() {
+        DialogController.showInputDialog("Deposit", null, "Please enter the amount you want to deposit:", null, new Function<String, String>() {
+            @Override
+            public String apply(String s) {
+                try {
+                    double value = Double.parseDouble(s);
+                    if (value <= 0) {
+                        DialogController.showErrorDialog("Input invalid", "Please check and re-enter");
+                    } else {
+                        RecordHelper.getInstance().updateRecord(userid, value);
+                        Platform.runLater(() -> viewAccounts());
+                    }
+                } catch (NumberFormatException e) {
+                    DialogController.showErrorDialog("Input invalid", "Please check and re-enter");
+                }
+                return s;
+            }
+        });
+    }
 
-	public void onTransfer() {
-		// Create the custom dialog.
-		Dialog<Pair<String, String>> dialog = new Dialog<>();
-		dialog.setTitle("Transfer");
+    public void onWithdraw() {
+        DialogController.showInputDialog("Withdraw", null, "Please enter the amount you want to withdraw:", null, new Function<String, String>() {
+            @Override
+            public String apply(String s) {
+                try {
+                    double value = Double.parseDouble(s);
+                    RecordHelper.getInstance().withdraw(userid, value);
+                    Platform.runLater(() -> viewAccounts());
+                } catch (NumberFormatException e) {
+                    DialogController.showErrorDialog("Input invalid", "Please check and re-enter");
+                }
+                return s;
+            }
+        });
+    }
 
-		// Set the button types.
-		ButtonType addButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-		dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
+    public void onTransfer() {
+        // Create the custom dialog.
+        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        dialog.setTitle("Transfer");
 
-		// Create the username and transfer amount labels and fields.
-		GridPane grid = new GridPane();
-		grid.setHgap(10);
-		grid.setVgap(10);
-		grid.setPadding(new Insets(20, 150, 10, 10));
+        // Set the button types.
+        ButtonType addButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
 
-		TextField username = new TextField();
-		username.setPromptText("Cid");
-		TextField amount = new TextField();
-		amount.setPromptText("Amount");
+        // Create the username and transfer amount labels and fields.
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
 
-		grid.add(new Label("Transfer To Cid:"), 0, 0);
-		grid.add(username, 1, 0);
-		grid.add(new Label("Transfer Amount:"), 0, 1);
-		grid.add(amount, 1, 1);
+        TextField username = new TextField();
+        username.setPromptText("Cid");
+        TextField amount = new TextField();
+        amount.setPromptText("Amount");
 
-		// Enable/Disable login button depending on whether a username was entered.
-		Node addButton = dialog.getDialogPane().lookupButton(addButtonType);
-		addButton.setDisable(true);
+        grid.add(new Label("Transfer To Cid:"), 0, 0);
+        grid.add(username, 1, 0);
+        grid.add(new Label("Transfer Amount:"), 0, 1);
+        grid.add(amount, 1, 1);
 
-		// Do some validation (using the Java 8 lambda syntax).
-		ChangeListener<Object> inputCallback = (observable, oldValue, newValue) -> {
-			addButton.setDisable(username.getText().trim().isEmpty() || amount.getText().trim().isEmpty());
-		};
+        // Enable/Disable login button depending on whether a username was entered.
+        Node addButton = dialog.getDialogPane().lookupButton(addButtonType);
+        addButton.setDisable(true);
 
-		username.textProperty().addListener(inputCallback);
-		amount.textProperty().addListener(inputCallback);
+        // Do some validation (using the Java 8 lambda syntax).
+        ChangeListener<Object> inputCallback = (observable, oldValue, newValue) -> {
+            addButton.setDisable(username.getText().trim().isEmpty() || amount.getText().trim().isEmpty());
+        };
 
-		dialog.getDialogPane().setContent(grid);
+        username.textProperty().addListener(inputCallback);
+        amount.textProperty().addListener(inputCallback);
 
-		// Request focus on the username field by default.
-		Platform.runLater(() -> username.requestFocus());
+        dialog.getDialogPane().setContent(grid);
 
-		// Convert the result to a username-password-pair when the login button is clicked.
-		dialog.setResultConverter(dialogButton -> {
-			if (dialogButton == addButtonType) {
-				return new Pair(username.getText(), amount.getText());
-			}
-			return null;
-		});
+        // Request focus on the username field by default.
+        Platform.runLater(() -> username.requestFocus());
 
-		Optional<Pair<String, String>> result = dialog.showAndWait();
+        // Convert the result to a username-password-pair when the login button is clicked.
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == addButtonType) {
+                return new Pair(username.getText(), amount.getText());
+            }
+            return null;
+        });
 
-		result.ifPresent(resultPair -> {
+        Optional<Pair<String, String>> result = dialog.showAndWait();
 
-			String name = resultPair.getKey();
-			String transferAmount = resultPair.getValue();
-			if (name == null || name.isEmpty() || transferAmount == null || transferAmount.isEmpty()) {
-				DialogController.showErrorDialog("Input invalid", "Please check and re-enter.");
-			} else {
-				try {
-					double doubleAmount = Double.parseDouble(transferAmount);
-					int cid = Integer.parseInt(name);
-					Boolean flag = RecordHelper.getInstance().withdraw(userid, doubleAmount);
-					if (flag) {
-						RecordHelper.getInstance().updateRecord(cid, doubleAmount);
-						Platform.runLater(() -> viewAccounts());
-					}
-				} catch (NumberFormatException e) {
-					DialogController.showErrorDialog("Input invalid", e.toString());
-				}
-			}
-		});
-	}
+        result.ifPresent(resultPair -> {
 
-	public static void setUserid(int user_id) {
-		userid = user_id;
-		System.out.println("Welcome id " + userid);
-	}
+            String name = resultPair.getKey();
+            String transferAmount = resultPair.getValue();
+            if (name == null || name.isEmpty() || transferAmount == null || transferAmount.isEmpty()) {
+                DialogController.showErrorDialog("Input invalid", "Please check and re-enter.");
+            } else {
+                try {
+                    double doubleAmount = Double.parseDouble(transferAmount);
+                    int cid = Integer.parseInt(name);
+                    Boolean flag = RecordHelper.getInstance().withdraw(userid, doubleAmount);
+                    if (flag) {
+                        RecordHelper.getInstance().updateRecord(cid, doubleAmount);
+                        Platform.runLater(() -> viewAccounts());
+                    }
+                } catch (NumberFormatException e) {
+                    DialogController.showErrorDialog("Input invalid", e.toString());
+                }
+            }
+        });
+    }
+
+    public static void setUserid(int user_id) {
+        userid = user_id;
+        System.out.println("Welcome id " + userid);
+    }
 
 
-	public ClientController() {
+    public ClientController() {
 
-		/*
-		 * Alert alert = new Alert(AlertType.INFORMATION);
-		 * alert.setTitle("From Customer controller");
-		 * alert.setHeaderText("Bank Of IIT- Chicago Main Branch");
-		 * alert.setContentText("Welcome !"); alert.showAndWait();
-		 */
+        /*
+         * Alert alert = new Alert(AlertType.INFORMATION);
+         * alert.setTitle("From Customer controller");
+         * alert.setHeaderText("Bank Of IIT- Chicago Main Branch");
+         * alert.setContentText("Welcome !"); alert.showAndWait();
+         */
 
-		cm = new ClientModel();
+        cm = new ClientModel();
 
-	}
+    }
 
 }
