@@ -58,9 +58,6 @@ public class RecordHelper {
             DialogController.showErrorDialog("Update Record Failed", "");
             return false;
         }
-//        String query = String.format("INSERT INTO brs2021_accounts(cid,balance) VALUES (%d,%f)", cid, balance);
-//        String query = ("INSERT INTO brs2021_accounts(cid,balance,create_time) VALUES ('"+cid+"','"+balance+"','"+System.currentTimeMillis()+"')");
-
         try {
             PreparedStatement stmt = connect.getConnection().prepareStatement("INSERT INTO brs2021_accounts(cid,balance,create_time) VALUES (?,?,?)");
             stmt.setInt(1, cid);

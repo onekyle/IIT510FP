@@ -10,7 +10,7 @@
     <children>
       <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" x="450.0" y="10.0">
          <image>
-            <Image url="@imgs/logo.png" />
+            <Image url="@../imgs/logo.png" />
          </image>
       </ImageView>
         <Label fx:id="userLbl" layoutX="42.0" layoutY="20.0" styleClass="user-label" text="AccountManager Panel">

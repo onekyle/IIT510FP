@@ -1,28 +1,29 @@
 package com.wkyle.bankrecord.models;
 
 import java.sql.*;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import com.wkyle.bankrecord.Dao.DBConnect;
 
 public class ClientModel extends DBConnect {
 
-    private int cid;
-    private int tid;
-    private double balance;
+	private int cid;
+	private int tid;
+	private double balance;
+	private String balanceStr;
 
     // Declare DB objects
     DBConnect conn = null;
     Statement stmt = null;
 
     public ClientModel() {
-
         conn = new DBConnect();
     }
 
     /* getters & setters */
-
     public int getCid() {
         return cid;
     }
@@ -43,12 +44,17 @@ public class ClientModel extends DBConnect {
         return balance;
     }
 
-    public void setBalance(Double balance) {
-        this.balance = balance;
-    }
+	public void setBalance(Double balance) {
+		NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.US);
+		this.balanceStr = nf.format(balance);
+		this.balance = balance;
+	}
 
-    // INSERT INTO METHOD
-    public void insertRecord(int cid, double bal) {
+	public String getBalanceStr() {
+		return this.balanceStr;
+	}
+	// INSERT INTO METHOD
+	public void insertRecord(int cid, double bal) {
 
         try {
             setCid(cid);
@@ -56,10 +62,6 @@ public class ClientModel extends DBConnect {
             System.out.println("Inserting record into the table...");
             stmt = conn.getConnection().createStatement();
             String sql = null;
-
-            // Include data to the database table
-
-//			sql = " insert into brs2021_accounts(cid, balance,create_time) values('" + cid + "', '" + bal + "','" + System.currentTimeMillis() + "')";
 
             PreparedStatement stmt = conn.getConnection().prepareStatement("insert into brs2021_accounts(cid, balance,create_time) values(?,?,?)");
             stmt.setInt(1, cid);
@@ -95,5 +97,4 @@ public class ClientModel extends DBConnect {
         }
         return accounts; // return arraylist
     }
-
 }

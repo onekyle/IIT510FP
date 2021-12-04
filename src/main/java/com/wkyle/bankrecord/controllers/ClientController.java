@@ -2,26 +2,22 @@ package com.wkyle.bankrecord.controllers;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 
-import com.wkyle.bankrecord.application.Main;
 import com.wkyle.bankrecord.models.AccountModel;
 import com.wkyle.bankrecord.models.LoginModel;
 import com.wkyle.bankrecord.models.RecordHelper;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
 import com.wkyle.bankrecord.models.ClientModel;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
@@ -31,6 +27,11 @@ public class ClientController implements Initializable {
 	
 	static int userid;
 	ClientModel cm;
+
+	@FXML
+	private Label userBalance;
+	@FXML
+	private Label userLbl;
 	
 	/***** TABLEVIEW intel *********************************************************************/
 
@@ -40,28 +41,6 @@ public class ClientController implements Initializable {
 	private TableColumn<ClientModel, String> tid;
 	@FXML
 	private TableColumn<ClientModel, String> balance;
-
-	@FXML
-	private Label userLbl;
-
-	public void initialize(URL location, ResourceBundle resources) {
-		AccountModel current = LoginModel.getInstance().getAccount();
-		userLbl.setText(String.format("Welcome %s, id: %d", current.getUname(), current.getCid()));
-
-		tid.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("tid"));
-		balance.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("balance"));
-
-		// auto adjust width of columns depending on their content
-		tblAccounts.setColumnResizePolicy((param) -> true);
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				customResize(tblAccounts);
-				viewAccounts();
-			}
-		});
-		tblAccounts.setVisible(false);
-	}
 
     public void customResize(TableView<?> view) {
 
@@ -73,77 +52,114 @@ public class ClientController implements Initializable {
 
         if (tableWidth > width.get()) {
             view.getColumns().forEach(col -> {
-                col.setPrefWidth(col.getWidth() + ((tableWidth - width.get()) / view.getColumns().size()));
+                col.setPrefWidth(col.getWidth()+((tableWidth-width.get())/view.getColumns().size()));
             });
         }
     }
+	/***** End TABLEVIEW intel *********************************************************************/
 
-    public void viewAccounts() {
-        tblAccounts.getItems().setAll(cm.getAccounts(userid)); // load table data from ClientModel List
-        tblAccounts.setVisible(true); // set tableview to visible if not
-    }
+	public void initialize(URL location, ResourceBundle resources) {
+		AccountModel current = LoginModel.getInstance().getAccount();
+		userLbl.setText(String.format("Welcome %s, id: %d", current.getUname(), current.getCid()));
 
-    /***** End TABLEVIEW intel *********************************************************************/
+		tid.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("tid"));
+		balance.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("balanceStr"));
 
-    public void logout() {
-        LoginModel.getInstance().logout();
-        Router.goToLoginView();
-    }
+		// auto adjust width of columns depending on their content
+		tblAccounts.setColumnResizePolicy((param) -> true);
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				updateUserBalance();
+				customResize(tblAccounts);
+			}
+		});
+		tblAccounts.setVisible(false);
+	}
 
-    public void createTransaction() {
+	public void viewAccounts() {
+		tblAccounts.getItems().setAll(cm.getAccounts(userid)); // load table data from ClientModel List
+		tblAccounts.setVisible(true); // set tableview to visible if not
+	}
 
-        TextInputDialog dialog = new TextInputDialog("Enter dollar amount");
-        dialog.setTitle("Bank Account Entry Portal");
-        dialog.setHeaderText("Enter Transaction");
-        dialog.setContentText("Please enter your balance:");
+	private void updateUserBalance() {
+		double balance = RecordHelper.getInstance().getBalance(userid);
 
-        // Traditional way to get the response value.
-        Optional<String> result = dialog.showAndWait();
-        if (result.isPresent()) {
-            System.out.println("Balance entry: " + result.get());
-            cm.insertRecord(userid, Double.parseDouble(result.get()));
-        }
+		NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
+		userBalance.setText(String.format("Balance:  %s", numberFormat.format(balance)));
+	}
 
-        // The Java 8 way to get the response value (with lambda expression).
-        result.ifPresent(balance -> System.out.println("Balance entry: " + balance));
+	public void logout() {
+		LoginModel.getInstance().logout();
+		Router.goToLoginView();
+	}
 
-    }
+	public void createTransaction() {
 
-    public void onDeposit() {
-        DialogController.showInputDialog("Deposit", null, "Please enter the amount you want to deposit:", null, new Function<String, String>() {
-            @Override
-            public String apply(String s) {
-                try {
-                    double value = Double.parseDouble(s);
-                    if (value <= 0) {
-                        DialogController.showErrorDialog("Input invalid", "Please check and re-enter");
-                    } else {
-                        RecordHelper.getInstance().updateRecord(userid, value);
-                        Platform.runLater(() -> viewAccounts());
-                    }
-                } catch (NumberFormatException e) {
-                    DialogController.showErrorDialog("Input invalid", "Please check and re-enter");
-                }
-                return s;
-            }
-        });
-    }
+		TextInputDialog dialog = new TextInputDialog("Enter dollar amount");
+		dialog.setTitle("Bank Account Entry Portal");
+		dialog.setHeaderText("Enter Transaction");
+		dialog.setContentText("Please enter your balance:");
 
-    public void onWithdraw() {
-        DialogController.showInputDialog("Withdraw", null, "Please enter the amount you want to withdraw:", null, new Function<String, String>() {
-            @Override
-            public String apply(String s) {
-                try {
-                    double value = Double.parseDouble(s);
-                    RecordHelper.getInstance().withdraw(userid, value);
-                    Platform.runLater(() -> viewAccounts());
-                } catch (NumberFormatException e) {
-                    DialogController.showErrorDialog("Input invalid", "Please check and re-enter");
-                }
-                return s;
-            }
-        });
-    }
+		// Traditional way to get the response value.
+		Optional<String> result = dialog.showAndWait();
+		if (result.isPresent()) {
+			System.out.println("Balance entry: " + result.get());
+			cm.insertRecord(userid,Double.parseDouble(result.get()));
+		}
+
+		// The Java 8 way to get the response value (with lambda expression).
+		result.ifPresent(balance -> System.out.println("Balance entry: " + balance));
+
+	}
+
+	public void onDeposit() {
+		DialogController.showInputDialog("Deposit", null, "Please enter the amount you want to deposit:", null, new Function<String, String>() {
+			@Override
+			public String apply(String s) {
+				try {
+					double value = Double.parseDouble(s);
+					if (value <= 0) {
+						DialogController.showErrorDialog("Input invalid", "Please check and re-enter");
+					} else {
+						RecordHelper.getInstance().updateRecord(userid, value);
+						Platform.runLater(new Runnable() {
+							@Override
+							public void run() {
+								updateUserBalance();
+								viewAccounts();
+							}
+						});
+					}
+				} catch (NumberFormatException e) {
+					DialogController.showErrorDialog("Input invalid", "Please check and re-enter");
+				}
+				return s;
+			}
+		});
+	}
+
+	public void onWithdraw() {
+		DialogController.showInputDialog("Withdraw", null, "Please enter the amount you want to withdraw:", null, new Function<String, String>() {
+			@Override
+			public String apply(String s) {
+				try {
+					double value = Double.parseDouble(s);
+					RecordHelper.getInstance().withdraw(userid, value);
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							updateUserBalance();
+							viewAccounts();
+						}
+					});
+				} catch (NumberFormatException e) {
+					DialogController.showErrorDialog("Input invalid", "Please check and re-enter");
+				}
+				return s;
+			}
+		});
+	}
 
     public void onTransfer() {
         // Create the custom dialog.
@@ -195,47 +211,42 @@ public class ClientController implements Initializable {
             return null;
         });
 
-        Optional<Pair<String, String>> result = dialog.showAndWait();
+		Optional<Pair<String, String>> result = dialog.showAndWait();
 
-        result.ifPresent(resultPair -> {
+		result.ifPresent(resultPair -> {
 
-            String name = resultPair.getKey();
-            String transferAmount = resultPair.getValue();
-            if (name == null || name.isEmpty() || transferAmount == null || transferAmount.isEmpty()) {
-                DialogController.showErrorDialog("Input invalid", "Please check and re-enter.");
-            } else {
-                try {
-                    double doubleAmount = Double.parseDouble(transferAmount);
-                    int cid = Integer.parseInt(name);
-                    Boolean flag = RecordHelper.getInstance().withdraw(userid, doubleAmount);
-                    if (flag) {
-                        RecordHelper.getInstance().updateRecord(cid, doubleAmount);
-                        Platform.runLater(() -> viewAccounts());
-                    }
-                } catch (NumberFormatException e) {
-                    DialogController.showErrorDialog("Input invalid", e.toString());
-                }
-            }
-        });
-    }
+			String name = resultPair.getKey();
+			String transferAmount = resultPair.getValue();
+			if (name == null || name.isEmpty() || transferAmount == null || transferAmount.isEmpty()) {
+				DialogController.showErrorDialog("Input invalid", "Please check and re-enter.");
+			} else {
+				try {
+					double doubleAmount = Double.parseDouble(transferAmount);
+					int cid = Integer.parseInt(name);
+					Boolean flag = RecordHelper.getInstance().withdraw(userid, doubleAmount);
+					if (flag) {
+						RecordHelper.getInstance().updateRecord(cid, doubleAmount);
+						Platform.runLater(new Runnable() {
+							@Override
+							public void run() {
+								updateUserBalance();
+								viewAccounts();
+							}
+						});
+					}
+				} catch (NumberFormatException e) {
+					DialogController.showErrorDialog("Input invalid", e.toString());
+				}
+			}
+		});
+	}
 
     public static void setUserid(int user_id) {
         userid = user_id;
         System.out.println("Welcome id " + userid);
     }
 
-
-    public ClientController() {
-
-        /*
-         * Alert alert = new Alert(AlertType.INFORMATION);
-         * alert.setTitle("From Customer controller");
-         * alert.setHeaderText("Bank Of IIT- Chicago Main Branch");
-         * alert.setContentText("Welcome !"); alert.showAndWait();
-         */
-
-        cm = new ClientModel();
-
+	public ClientController() {
+		cm = new ClientModel();
     }
-
 }

@@ -9,11 +9,11 @@
    <children>
       <ImageView fitHeight="257.0" fitWidth="308.0" layoutX="27.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <image>
-            <Image url="@imgs/login-background.png" />
+            <Image url="@../imgs/login-background.png" />
          </image></ImageView>
       <ImageView fitHeight="159.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="180.0" AnchorPane.rightAnchor="180.0" AnchorPane.topAnchor="20.0">
          <image>
-            <Image url="@imgs/logo.png" />
+            <Image url="@../imgs/logo.png" />
          </image></ImageView>
       <FlowPane alignment="TOP_CENTER" columnHalignment="CENTER" hgap="20.0" layoutX="167.0" layoutY="190.0" minWidth="266.0" prefHeight="60.0" prefWidth="266.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>

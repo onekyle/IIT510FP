@@ -44,23 +44,21 @@ public class AdminModel extends DBConnect {
         }
     }
 
-    public void updateBank(String recordId, String recordBalance) {
-        System.out.println("Update Submit button pressed");
-//		String recordID = recordIDTF.getText();
-//		String recordBalance = recordBalanceTF.getText();
-        if (recordId == null || recordId.isEmpty() || recordBalance == null || recordBalance.isEmpty()) {
-            DialogController.showErrorDialog("Input invalid", "Please check and re-enter.");
-        } else {
-            try {
-                RecordHelper.getInstance().updateRecord(Integer.parseInt(recordId), Double.parseDouble(recordBalance));
-            } catch (NumberFormatException e) {
-                DialogController.showErrorDialog("Input invalid", e.toString());
-            }
-        }
-    }
+	public void updateBank(String recordId, String recordBalance) {
+		System.out.println("Update Submit button pressed");
+		if (recordId == null || recordId.isEmpty() || recordBalance == null || recordBalance.isEmpty()) {
+			DialogController.showErrorDialog("Input invalid", "Please check and re-enter.");
+		} else {
+			try {
+				RecordHelper.getInstance().updateRecord(Integer.parseInt(recordId), Double.parseDouble(recordBalance));
+			} catch (NumberFormatException e) {
+				DialogController.showErrorDialog("Input invalid", e.toString());
+			}
+		}
+	}
 
-    public void deleteBank(String tid) {
-        System.out.println("Delete Submit button pressed");
+	public void deleteBank(String tid) {
+		System.out.println("Delete Submit button pressed");
 //		String tid = deleteTidTF.getText();
         if (tid == null || tid.isEmpty()) {
             DialogController.showErrorDialog("Input invalid", "Please check and re-enter.");

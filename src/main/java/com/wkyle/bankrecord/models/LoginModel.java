@@ -46,21 +46,21 @@ public class LoginModel extends DBConnect {
 //		String alter = "ALTER TABLE Persons\n" +
 //				"ADD UNIQUE (uname);";
 
-        String createTransactionRecordsTable = "CREATE TABLE IF NOT EXISTS brs2021_accounts " +
-                "(tid INTEGER not NULL AUTO_INCREMENT, " +
-                " cid int, " +
-                " balance numeric(8,2), " +
-                "create_time datetime," +
-                " PRIMARY KEY ( tid ))";
+		String createTransactionRecordsTable = "CREATE TABLE IF NOT EXISTS brs2021_accounts " +
+				"(tid INTEGER not NULL AUTO_INCREMENT, " +
+				" cid int, " +
+				" balance numeric(38,2), " +
+				"create_time datetime,"+
+				" PRIMARY KEY ( tid ))";
 
-        String createBankTable = "CREATE TABLE IF NOT EXISTS brs2021_bank " +
-                "(id INTEGER not NULL AUTO_INCREMENT, " +
-                " name VARCHAR(255), " +
-                " address VARCHAR(255), " +
-                "create_time datetime," +
-                " PRIMARY KEY ( id ))";
-        try {
-            Statement stmt = connection.createStatement();
+		String createBankTable = "CREATE TABLE IF NOT EXISTS brs2021_bank " +
+				"(id INTEGER not NULL AUTO_INCREMENT, " +
+				" name VARCHAR(255), " +
+				" address VARCHAR(255), " +
+				"create_time datetime,"+
+				" PRIMARY KEY ( id ))";
+		try {
+			Statement stmt = connection.createStatement();
 //			stmt.executeUpdate(dropTable);
             stmt.executeUpdate(createUsersTable);
 //			stmt.executeUpdate(alter);
