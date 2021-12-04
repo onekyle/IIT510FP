@@ -28,40 +28,40 @@ import javafx.util.Pair;
 
 
 public class ClientController implements Initializable {
+	
+	static int userid;
+	ClientModel cm;
+	
+	/***** TABLEVIEW intel *********************************************************************/
 
-    static int userid;
-    ClientModel cm;
+	@FXML
+	private TableView<ClientModel> tblAccounts;
+	@FXML
+	private TableColumn<ClientModel, String> tid;
+	@FXML
+	private TableColumn<ClientModel, String> balance;
 
-    /***** TABLEVIEW intel *********************************************************************/
+	@FXML
+	private Label userLbl;
 
-    @FXML
-    private TableView<ClientModel> tblAccounts;
-    @FXML
-    private TableColumn<ClientModel, String> tid;
-    @FXML
-    private TableColumn<ClientModel, String> balance;
+	public void initialize(URL location, ResourceBundle resources) {
+		AccountModel current = LoginModel.getInstance().getAccount();
+		userLbl.setText(String.format("Welcome %s, id: %d", current.getUname(), current.getCid()));
 
-    @FXML
-    private Label userLbl;
+		tid.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("tid"));
+		balance.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("balance"));
 
-    public void initialize(URL location, ResourceBundle resources) {
-        AccountModel current = LoginModel.getInstance().getAccount();
-        userLbl.setText(String.format("Welcome %s, id: %d", current.getUname(), current.getCid()));
-
-        tid.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("tid"));
-        balance.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("balance"));
-
-        // auto adjust width of columns depending on their content
-        tblAccounts.setColumnResizePolicy((param) -> true);
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                customResize(tblAccounts);
-                tblAccounts.setVisible(true);
-            }
-        });
-        tblAccounts.setVisible(false);
-    }
+		// auto adjust width of columns depending on their content
+		tblAccounts.setColumnResizePolicy((param) -> true);
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				customResize(tblAccounts);
+				viewAccounts();
+			}
+		});
+		tblAccounts.setVisible(false);
+	}
 
     public void customResize(TableView<?> view) {
 
