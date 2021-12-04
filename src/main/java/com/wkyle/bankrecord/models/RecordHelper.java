@@ -4,6 +4,8 @@ import com.wkyle.bankrecord.Dao.DBConnect;
 import com.wkyle.bankrecord.controllers.DialogController;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RecordHelper {
 
@@ -18,6 +20,25 @@ public class RecordHelper {
     }
 
     private DBConnect connect = null;
+
+    public List<ClientModel> getRecordsForUser(int cid) {
+        List<ClientModel> accounts = new ArrayList<>();
+        String query = "SELECT tid,balance FROM brs2021_accounts WHERE cid = ?;";
+        try (PreparedStatement statement = connect.getConnection().prepareStatement(query)) {
+            statement.setInt(1, cid);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                ClientModel account = new ClientModel();
+                // grab record data by table field name into ClientModel account object
+                account.setTid(resultSet.getInt("tid"));
+                account.setBalance(resultSet.getDouble("balance"));
+                accounts.add(account); // add account data to arraylist
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching Accounts: " + e);
+        }
+        return accounts; // return arraylist
+    }
 
     public double getBalance(int cid) {
         if (AccountHelper.getInstance().getAccount(cid, null) == null) {

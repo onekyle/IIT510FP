@@ -1,6 +1,5 @@
 package com.wkyle.bankrecord.controllers;
 
-import java.io.IOException;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.util.*;
@@ -26,8 +25,6 @@ import javafx.util.Pair;
 public class ClientController implements Initializable {
 	
 	static int userid;
-	ClientModel cm;
-
 	@FXML
 	private Label userBalance;
 	@FXML
@@ -78,7 +75,7 @@ public class ClientController implements Initializable {
 	}
 
 	public void viewAccounts() {
-		tblAccounts.getItems().setAll(cm.getAccounts(userid)); // load table data from ClientModel List
+		tblAccounts.getItems().setAll(RecordHelper.getInstance().getRecordsForUser(userid)); // load table data from ClientModel List
 		tblAccounts.setVisible(true); // set tableview to visible if not
 	}
 
@@ -105,7 +102,7 @@ public class ClientController implements Initializable {
 		Optional<String> result = dialog.showAndWait();
 		if (result.isPresent()) {
 			System.out.println("Balance entry: " + result.get());
-			cm.insertRecord(userid,Double.parseDouble(result.get()));
+			RecordHelper.getInstance().updateRecord(userid, Double.parseDouble(result.get()));
 		}
 
 		// The Java 8 way to get the response value (with lambda expression).
@@ -244,9 +241,5 @@ public class ClientController implements Initializable {
     public static void setUserid(int user_id) {
         userid = user_id;
         System.out.println("Welcome id " + userid);
-    }
-
-	public ClientController() {
-		cm = new ClientModel();
     }
 }
