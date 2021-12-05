@@ -1,14 +1,11 @@
-package com.wkyle.bankrecord.models;
+package com.wkyle.bankrecord.Dao;
 
 import com.wkyle.bankrecord.Dao.DBConnect;
+import com.wkyle.bankrecord.Dao.RecordHelper;
 import com.wkyle.bankrecord.controllers.DialogController;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AdminModel extends DBConnect {
 

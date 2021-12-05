@@ -1,16 +1,11 @@
 package com.wkyle.bankrecord.controllers;
 
-import com.wkyle.bankrecord.application.Main;
-import com.wkyle.bankrecord.models.AccountHelper;
+import com.wkyle.bankrecord.Dao.AccountHelper;
 import com.wkyle.bankrecord.models.AccountModel;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
-import com.wkyle.bankrecord.models.LoginModel;
+import com.wkyle.bankrecord.Dao.LoginModel;
 
 public class LoginController {
 
@@ -24,7 +19,6 @@ public class LoginController {
 
     public LoginController() {
         model = LoginModel.getInstance();
-        model.setupSQLTable();
     }
 
     public void login() {

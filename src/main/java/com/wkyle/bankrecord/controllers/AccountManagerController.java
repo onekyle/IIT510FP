@@ -1,10 +1,10 @@
 package com.wkyle.bankrecord.controllers;
 
 import com.wkyle.bankrecord.Dao.DBConnect;
-import com.wkyle.bankrecord.models.AccountHelper;
+import com.wkyle.bankrecord.Dao.AccountHelper;
 import com.wkyle.bankrecord.models.AccountModel;
-import com.wkyle.bankrecord.models.LoginModel;
-import com.wkyle.bankrecord.models.RecordHelper;
+import com.wkyle.bankrecord.Dao.LoginModel;
+import com.wkyle.bankrecord.Dao.RecordHelper;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,7 +13,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 
 import java.net.URL;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Optional;
 import java.util.ResourceBundle;

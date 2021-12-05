@@ -1,7 +1,8 @@
-package com.wkyle.bankrecord.models;
+package com.wkyle.bankrecord.Dao;
 
-import com.wkyle.bankrecord.Dao.DBConnect;
 import com.wkyle.bankrecord.controllers.DialogController;
+import com.wkyle.bankrecord.models.ClientModel;
+import com.wkyle.bankrecord.utils.HashSHAUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -111,5 +112,59 @@ public class RecordHelper {
             DialogController.showErrorDialog("Delete Record Failed", se.toString());
         }
         return false;
+    }
+
+    public void setupSQLTable() {
+        String createUsersTable = "CREATE TABLE IF NOT EXISTS brs2021_users " +
+                "(id INTEGER not NULL AUTO_INCREMENT, " +
+                " uname VARCHAR(255), " +
+                " passwd VARCHAR(255)," +
+                " role int, " +
+                "create_time datetime," +
+                " PRIMARY KEY ( id )," +
+                "UNIQUE (uname))";
+
+
+        String createTransactionRecordsTable = "CREATE TABLE IF NOT EXISTS brs2021_accounts " +
+                "(tid INTEGER not NULL AUTO_INCREMENT, " +
+                " cid int, " +
+                " balance numeric(38,2), " +
+                "create_time datetime,"+
+                " PRIMARY KEY ( tid ))";
+
+        String createBankTable = "CREATE TABLE IF NOT EXISTS brs2021_bank " +
+                "(id INTEGER not NULL AUTO_INCREMENT, " +
+                " name VARCHAR(255), " +
+                " address VARCHAR(255), " +
+                "create_time datetime,"+
+                " PRIMARY KEY ( id ))";
+        try {
+            Statement stmt = connect.getConnection().createStatement();
+            stmt.executeUpdate(createUsersTable);
+            stmt.executeUpdate(createTransactionRecordsTable);
+            stmt.executeUpdate(createBankTable);
+        } catch (Exception se) {
+            se.printStackTrace();
+        }
+    }
+
+    public void setupSQL() {
+        String createUserSql = "replace into brs2021_users( uname, passwd, role, create_time) values(?,?,?,?)";
+        try {
+            PreparedStatement stmt = connect.getConnection().prepareStatement(createUserSql);
+            stmt.setString(1, "admin");
+            stmt.setString(2, HashSHAUtils.toMD5("123456"));
+            stmt.setInt(3, 0);
+            stmt.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
+            stmt.executeUpdate();
+            stmt.setString(1, "manage");
+            stmt.setString(2, HashSHAUtils.toMD5("123456"));
+            stmt.setInt(3, 1);
+            stmt.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
+            stmt.executeUpdate();
+
+        } catch (Exception se) {
+            se.printStackTrace();
+        }
     }
 }

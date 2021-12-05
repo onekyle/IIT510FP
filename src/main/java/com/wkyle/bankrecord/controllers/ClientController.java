@@ -7,8 +7,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 
 import com.wkyle.bankrecord.models.AccountModel;
-import com.wkyle.bankrecord.models.LoginModel;
-import com.wkyle.bankrecord.models.RecordHelper;
+import com.wkyle.bankrecord.Dao.LoginModel;
+import com.wkyle.bankrecord.Dao.RecordHelper;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;

@@ -9,4 +9,6 @@ module com.wkyle.bankrecord {
     exports com.wkyle.bankrecord.controllers;
     opens com.wkyle.bankrecord.models to javafx.fxml;
     exports com.wkyle.bankrecord.models;
+    exports com.wkyle.bankrecord.Dao;
+    opens com.wkyle.bankrecord.Dao to javafx.fxml;
 }

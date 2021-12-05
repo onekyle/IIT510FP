@@ -1,6 +1,5 @@
 package com.wkyle.bankrecord.controllers;
 
-import com.wkyle.bankrecord.models.AccountHelper;
 import com.wkyle.bankrecord.models.AccountModel;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -10,13 +9,10 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
-import javax.security.auth.callback.Callback;
-import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class DialogController {
