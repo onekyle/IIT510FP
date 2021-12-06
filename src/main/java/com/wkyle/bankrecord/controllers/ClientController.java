@@ -75,7 +75,7 @@ public class ClientController implements Initializable {
 	}
 
 	public void viewAccounts() {
-		tblAccounts.getItems().setAll(RecordHelper.getInstance().getRecordsForUser(userid)); // load table data from ClientModel List
+		tblAccounts.getItems().setAll(RecordHelper.getInstance().getRecords()); // load table data from ClientModel List
 		tblAccounts.setVisible(true); // set tableview to visible if not
 	}
 

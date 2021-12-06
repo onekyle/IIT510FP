@@ -20,35 +20,28 @@
       </Label>
 
       <Button layoutX="36.0" layoutY="75.0" mnemonicParsing="false" onAction="#viewAccounts" text="View Accounts" />
-      <Button layoutX="36.0" layoutY="134.0" mnemonicParsing="false" onAction="#updateRec" text="Update Record" />
-      <Button layoutX="36.0" layoutY="191.0" mnemonicParsing="false" onAction="#deleteRec" text="Delete Record" />
-      <Button layoutX="36.0" layoutY="244.0" mnemonicParsing="false" onAction="#addBankRec" text="Add Bank Affiliate" />
+      <Button layoutX="36.0" layoutY="134.0" mnemonicParsing="false" onAction="#viewRecords" text="View Records" />
+      <Button layoutX="36.0" layoutY="191.0" mnemonicParsing="false" onAction="#addBankRec" text="Add Bank Affiliate" />
       <Button layoutX="36.0" layoutY="340.0" mnemonicParsing="false" onAction="#logout" prefHeight="27.0" prefWidth="96.0" styleClass="destroy-button" text="Logout" />
-      <Pane fx:id="pane1" layoutX="176.0" layoutY="75.0" prefHeight="282.0" prefWidth="375.0" styleClass="division-pane" visible="false">
-         <effect>
-            <Glow level="0.0" />
-         </effect>
+      <Pane fx:id="paneRecords" layoutX="176.0" layoutY="75.0" prefHeight="282.0" prefWidth="375.0" visible="false">
          <children>
-            <Button layoutX="158.0" layoutY="229.0" mnemonicParsing="false" onAction="#submitUpdate" text="Submit" />
-            <TextField fx:id="recordBalanceTF" layoutX="104.0" layoutY="151.0" />
-            <TextField fx:id="recordIDTF" layoutX="104.0" layoutY="48.0" />
-            <Label layoutX="109.0" layoutY="22.0" styleClass="ct-inner-lbl" text="Enter desired ID" />
-            <Label layoutX="109.0" layoutY="109.0" styleClass="ct-inner-lbl" text="Enter new balance" />
-<!--            <Label layoutX="14.0" layoutY="234.0" text="Record Updated?" textFill="#803131" />-->
-         </children> 
-      </Pane>
-      <Pane fx:id="pane2" layoutX="176.0" layoutY="75.0" prefHeight="282.0" prefWidth="375.0" styleClass="division-pane" visible="false">
-         <effect>
-            <Glow level="0.0" />
-         </effect>
-         <children>
-            <Button layoutX="145.0" layoutY="171.0" mnemonicParsing="false" onAction="#submitDelete" text="Submit" />
-            <TextField fx:id="deleteTidTF" layoutX="105.0" layoutY="93.0" />
-            <Label layoutX="109.0" layoutY="55.0" styleClass="ct-inner-lbl" text="Enter desired ID" />
-<!--            <Label layoutX="14.0" layoutY="176.0" text="Record Deleted?" textFill="#803131" />-->
+            <TableView fx:id="tblRecords" prefHeight="217.0" prefWidth="375.0">
+               <columns>
+                  <TableColumn fx:id="recordTid" prefWidth="60.0" text="Tid" />
+                  <TableColumn fx:id="recordCid" prefWidth="50.0" text="Cid" />
+                  <TableColumn fx:id="recordAmount" prefWidth="265.0" text="Amount" />
+               </columns>
+            </TableView>
+            <FlowPane alignment="CENTER" hgap="60.0" layoutY="225.0" prefHeight="42.0" prefWidth="375.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#addRecord" prefWidth="60.0" text="Add" />
+                  <Button mnemonicParsing="false" onAction="#editRecord" prefWidth="60.0" text="Edit" />
+                  <Button mnemonicParsing="false" onAction="#deleteRecord" prefWidth="60.0" styleClass="destroy-button" text="Delete" />
+               </children>
+            </FlowPane>
          </children>
       </Pane>
-      <Pane fx:id="pane3" layoutX="176.0" layoutY="75.0" prefHeight="282.0" prefWidth="375.0" styleClass="division-pane">
+      <Pane fx:id="paneAddBank" layoutX="176.0" layoutY="75.0" prefHeight="282.0" prefWidth="375.0" styleClass="division-pane">
          <effect>
             <Glow level="0.0" />
          </effect>

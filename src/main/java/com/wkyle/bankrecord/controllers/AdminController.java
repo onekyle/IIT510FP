@@ -19,24 +19,15 @@ import javafx.scene.layout.Pane;
 public class AdminController implements Initializable {
 
     @FXML
-    private Pane pane1;
+    private Pane paneRecords;
     @FXML
-    private Pane pane2;
-    @FXML
-    private Pane pane3;
+    private Pane paneAddBank;
     @FXML
     private Pane paneAccounts;
     @FXML
     private TextField txtName;
     @FXML
     private TextField txtAddress;
-
-    @FXML
-    private TextField recordIDTF;
-    @FXML
-    private TextField recordBalanceTF;
-    @FXML
-    private TextField deleteTidTF;
 
 
     @FXML
@@ -48,14 +39,26 @@ public class AdminController implements Initializable {
     @FXML
     private TableColumn<AccountModel, String> roleType;
 
+    @FXML
+    private TableView<ClientModel> tblRecords;
+    @FXML
+    private TableColumn<ClientModel, String> recordTid;
+    @FXML
+    private TableColumn<ClientModel, String> recordCid;
+    @FXML
+    private TableColumn<ClientModel, String> recordAmount;
+
     AdminModel adminModel = null;
 
     public void initialize(URL location, ResourceBundle resources) {
         accountID.setCellValueFactory(new PropertyValueFactory<AccountModel, String>("cid"));
         accountName.setCellValueFactory(new PropertyValueFactory<AccountModel, String>("uname"));
         roleType.setCellValueFactory(new PropertyValueFactory<AccountModel, String>("roleTypeString"));
-        updateTable();
         viewAccounts();
+
+        recordTid.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("tid"));
+        recordCid.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("cid"));
+        recordAmount.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("balanceStr"));
     }
 
     public AdminController() {
@@ -64,59 +67,26 @@ public class AdminController implements Initializable {
 
     public void viewAccounts() {
         paneAccounts.setVisible(true);
-        pane3.setVisible(false);
-        pane2.setVisible(false);
-        pane1.setVisible(false);
+        paneRecords.setVisible(false);
+        paneAddBank.setVisible(false);
+        updateAccountTableData();
     }
 
-    public void updateRec() {
+    public void viewRecords() {
         paneAccounts.setVisible(false);
-        pane3.setVisible(false);
-        pane2.setVisible(false);
-        pane1.setVisible(true);
-    }
-
-    public void deleteRec() {
-        paneAccounts.setVisible(false);
-        pane1.setVisible(false);
-        pane2.setVisible(true);
-        pane3.setVisible(false);
+        paneRecords.setVisible(true);
+        paneAddBank.setVisible(false);
+        updateRecordTableData();
     }
 
     public void addBankRec() {
         paneAccounts.setVisible(false);
-        pane1.setVisible(false);
-        pane2.setVisible(false);
-        pane3.setVisible(true);
+        paneRecords.setVisible(false);
+        paneAddBank.setVisible(true);
     }
 
     public void submitBank() {
         adminModel.createBank(txtName.getText(), txtAddress.getText());
-    }
-
-    public void submitUpdate() {
-        System.out.println("Update Submit button pressed");
-        String recordID = recordIDTF.getText();
-        String recordBalance = recordBalanceTF.getText();
-        if (recordID == null || recordID.isEmpty() || recordBalance == null || recordBalance.isEmpty()) {
-            DialogController.showErrorDialog("Input invalid", "Please check and re-enter.");
-        } else {
-            RecordHelper.getInstance().updateRecord(Integer.parseInt(recordID), Double.parseDouble(recordBalance));
-        }
-    }
-
-    public void submitDelete() {
-        System.out.println("Delete Submit button pressed");
-        String tid = deleteTidTF.getText();
-        if (tid == null || tid.isEmpty()) {
-            DialogController.showErrorDialog("Input invalid", "Please check and re-enter.");
-        } else {
-            try {
-                RecordHelper.getInstance().deleteRecord(Integer.parseInt(tid));
-            } catch (NumberFormatException e) {
-                DialogController.showErrorDialog("Input invalid", e.toString());
-            }
-        }
     }
 
     public void logout() {
@@ -130,7 +100,7 @@ public class AdminController implements Initializable {
             public AccountModel apply(AccountModel accountModel) {
                 Boolean flag = AccountHelper.getInstance().createUser(accountModel.getUname(), accountModel.getPasswdEncrypted(), accountModel.getRoleType());
                 if (flag) {
-                    Platform.runLater(() -> updateTable());
+                    Platform.runLater(() -> updateAccountTableData());
                 }
                 return accountModel;
             }
@@ -151,7 +121,7 @@ public class AdminController implements Initializable {
                 }
                 Boolean flag = AccountHelper.getInstance().editAccount(accountModel, model);
                 if (flag) {
-                    Platform.runLater(() -> updateTable());
+                    Platform.runLater(() -> updateAccountTableData());
                 }
                 return accountModel;
             }
@@ -181,7 +151,46 @@ public class AdminController implements Initializable {
         }
     }
 
-    private void updateTable() {
+    public void addRecord() {
+        DialogController.recordInfoInputDialog("Add Record", null, new Function<ClientModel, ClientModel>() {
+            @Override
+            public ClientModel apply(ClientModel clientModel) {
+                Boolean flag = RecordHelper.getInstance().updateBalance(clientModel.getCid(), clientModel.getBalance());
+                if (flag) {
+                    Platform.runLater(() -> updateRecordTableData());
+                }
+                return clientModel;
+            }
+        });
+    }
+
+    public void editRecord() {
+        ClientModel model = tblRecords.getSelectionModel().getSelectedItem();
+        DialogController.recordInfoInputDialog("Add Record", model, new Function<ClientModel, ClientModel>() {
+            @Override
+            public ClientModel apply(ClientModel clientModel) {
+                Boolean flag = RecordHelper.getInstance().updateRecord(model.getTid(), clientModel.getBalance());
+                if (flag) {
+                    Platform.runLater(() -> updateRecordTableData());
+                }
+                return clientModel;
+            }
+        });
+    }
+
+    public void deleteRecord() {
+        ClientModel model = tblRecords.getSelectionModel().getSelectedItem();
+        Boolean flag = RecordHelper.getInstance().deleteRecord(model.getTid());
+        if (flag) {
+            Platform.runLater(() -> updateRecordTableData());
+        }
+    }
+
+    private void updateAccountTableData() {
         tblAccounts.getItems().setAll(AccountHelper.getInstance().getAccounts(AccountModel.RoleType.ADMIN));
+    }
+
+    private void updateRecordTableData() {
+        tblRecords.getItems().setAll(RecordHelper.getInstance().getRecords());
     }
 }

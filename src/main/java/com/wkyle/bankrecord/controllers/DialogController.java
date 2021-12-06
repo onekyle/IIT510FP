@@ -1,6 +1,7 @@
 package com.wkyle.bankrecord.controllers;
 
 import com.wkyle.bankrecord.models.AccountModel;
+import com.wkyle.bankrecord.models.ClientModel;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -127,6 +128,84 @@ public class DialogController {
         result.ifPresent(resultModel -> {
             if (placeHolder != null) {
                 if (Objects.equals(placeHolder.getUname(), resultModel.getUname()) && Objects.equals(placeHolder.getPasswdEncrypted(), resultModel.getPasswdEncrypted()) && placeHolder.getRoleType() == resultModel.getRoleType()) {
+                    // edit doesn't change anything
+                    return;
+                }
+            }
+            callback.apply(resultModel);
+        });
+
+        return dialog;
+    }
+
+    public static Dialog<ClientModel> recordInfoInputDialog(String title, ClientModel placeHolder, Function<ClientModel, ClientModel> callback) {
+        // Create the custom dialog.
+        Dialog<ClientModel> dialog = new Dialog<>();
+        dialog.setTitle(title == null ? "Add Record" : title);
+
+        // Set the button types.
+        ButtonType addButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
+
+        // Create the username and password labels and fields.
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField cidTf = new TextField();
+        cidTf.setPromptText("Cid");
+        TextField amountTf = new TextField();
+        amountTf.setPromptText("Amount");
+        List<String> choices = new ArrayList<>();
+        grid.add(new Label("Cid:"), 0, 0);
+        grid.add(cidTf, 1, 0);
+        grid.add(new Label("Amount:"), 0, 1);
+        grid.add(amountTf, 1, 1);
+
+        if (placeHolder != null) {
+            grid.add(new Label("Tid:"), 0, 2);
+            grid.add(new Label(String.valueOf(placeHolder.getTid())), 1, 2);
+            cidTf.setText(String.valueOf(placeHolder.getCid()));
+            cidTf.setDisable(true);
+            amountTf.setText(String.valueOf(placeHolder.getBalance()));
+        }
+        // Enable/Disable login button depending on whether a username was entered.
+        Node addButton = dialog.getDialogPane().lookupButton(addButtonType);
+        addButton.setDisable(true);
+
+        // Do some validation (using the Java 8 lambda syntax).
+        ChangeListener<Object> inputCallback = (observable, oldValue, newValue) -> {
+            addButton.setDisable(cidTf.getText().trim().isEmpty() || amountTf.getText().trim().isEmpty());
+        };
+
+        cidTf.textProperty().addListener(inputCallback);
+        amountTf.textProperty().addListener(inputCallback);
+
+        dialog.getDialogPane().setContent(grid);
+
+        // Request focus on the username field by default.
+        Platform.runLater(() -> cidTf.requestFocus());
+
+        // Convert the result to a username-password-pair when the login button is clicked.
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == addButtonType) {
+                ClientModel model = new ClientModel();
+                if (placeHolder != null) {
+                    model.setTid(placeHolder.getTid());
+                }
+                model.setCid(Integer.parseInt(cidTf.getText()));
+                model.setBalance(Double.parseDouble(amountTf.getText()));
+                return model;
+            }
+            return null;
+        });
+
+        Optional<ClientModel> result = dialog.showAndWait();
+
+        result.ifPresent(resultModel -> {
+            if (placeHolder != null) {
+                if (Objects.equals(placeHolder.getBalance(), resultModel.getBalance())) {
                     // edit doesn't change anything
                     return;
                 }

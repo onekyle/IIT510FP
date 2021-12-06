@@ -1,6 +1,7 @@
 package com.wkyle.bankrecord.Dao;
 
 import com.wkyle.bankrecord.controllers.DialogController;
+import com.wkyle.bankrecord.models.AccountModel;
 import com.wkyle.bankrecord.models.ClientModel;
 import com.wkyle.bankrecord.utils.HashSHAUtils;
 
@@ -22,15 +23,22 @@ public class RecordHelper {
 
     private DBConnect connect = null;
 
-    public List<ClientModel> getRecordsForUser(int cid) {
+    public List<ClientModel> getRecords() {
+        String query = "SELECT tid,cid,balance FROM brs2021_accounts";
+        AccountModel current = LoginModel.getInstance().getAccount();
+        if (current.getRoleType() == AccountModel.RoleType.CUSTOMER) {
+            query += ("WHERE cid = " + current.getCid());
+        }
         List<ClientModel> accounts = new ArrayList<>();
-        String query = "SELECT tid,balance FROM brs2021_accounts WHERE cid = ?;";
         try (PreparedStatement statement = connect.getConnection().prepareStatement(query)) {
-            statement.setInt(1, cid);
+            if (current.getRoleType() == AccountModel.RoleType.CUSTOMER) {
+                statement.setInt(1, current.getCid());
+            }
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 ClientModel account = new ClientModel();
                 // grab record data by table field name into ClientModel account object
+                account.setCid(resultSet.getInt("cid"));
                 account.setTid(resultSet.getInt("tid"));
                 account.setBalance(resultSet.getDouble("balance"));
                 accounts.add(account); // add account data to arraylist
@@ -79,20 +87,21 @@ public class RecordHelper {
         if (AccountHelper.getInstance().getAccount(cid, null) == null) {
             DialogController.showErrorDialog("Update Record Failed", "User doesn't exits.");
             return false;
-        }
-        try {
-            PreparedStatement stmt = connect.getConnection().prepareStatement("INSERT INTO brs2021_accounts(cid,balance,create_time) VALUES (?,?,?)");
-            stmt.setInt(1, cid);
-            stmt.setDouble(2, amount);
-            Timestamp date = new Timestamp(System.currentTimeMillis());
-            stmt.setTimestamp(3, date);
-            int ret = stmt.executeUpdate();
-            if (ret == 1) {
-                return true;
+        } else {
+            try {
+                PreparedStatement stmt = connect.getConnection().prepareStatement("INSERT INTO brs2021_accounts(cid,balance,create_time) VALUES (?,?,?)");
+                stmt.setInt(1, cid);
+                stmt.setDouble(2, amount);
+                Timestamp date = new Timestamp(System.currentTimeMillis());
+                stmt.setTimestamp(3, date);
+                int ret = stmt.executeUpdate();
+                if (ret == 1) {
+                    return true;
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+                DialogController.showErrorDialog("Update Record Failed", se.toString());
             }
-        } catch (SQLException se) {
-            se.printStackTrace();
-            DialogController.showErrorDialog("Update Record Failed", se.toString());
         }
         return false;
     }
