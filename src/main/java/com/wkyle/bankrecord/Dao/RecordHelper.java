@@ -23,18 +23,18 @@ public class RecordHelper {
 
     private DBConnect connect = null;
 
-    public List<ClientModel> getRecords() {
+    /*
+     * cid: -1 for all users records.
+     */
+    public List<ClientModel> getRecords(int cid) {
         String query = "SELECT tid,cid,balance FROM brs2021_accounts";
-        AccountModel current = LoginModel.getInstance().getAccount();
-        if (current.getRoleType() == AccountModel.RoleType.CUSTOMER) {
-            query += ("WHERE cid = " + current.getCid());
+        if (cid != -1) {
+            query += (" WHERE cid = " + cid + ";");
         }
         List<ClientModel> accounts = new ArrayList<>();
-        try (PreparedStatement statement = connect.getConnection().prepareStatement(query)) {
-            if (current.getRoleType() == AccountModel.RoleType.CUSTOMER) {
-                statement.setInt(1, current.getCid());
-            }
-            ResultSet resultSet = statement.executeQuery();
+        try {
+            Statement stmt = connect.getConnection().createStatement();
+            ResultSet resultSet = stmt.executeQuery(query);
             while (resultSet.next()) {
                 ClientModel account = new ClientModel();
                 // grab record data by table field name into ClientModel account object

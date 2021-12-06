@@ -24,7 +24,7 @@ import javafx.util.Pair;
 
 public class ClientController implements Initializable {
 	
-	static int userid;
+	private int userid;
 	@FXML
 	private Label userBalance;
 	@FXML
@@ -33,7 +33,7 @@ public class ClientController implements Initializable {
 	/***** TABLEVIEW intel *********************************************************************/
 
 	@FXML
-	private TableView<ClientModel> tblAccounts;
+	private TableView<ClientModel> tblRecords;
 	@FXML
 	private TableColumn<ClientModel, String> tid;
 	@FXML
@@ -57,26 +57,28 @@ public class ClientController implements Initializable {
 
 	public void initialize(URL location, ResourceBundle resources) {
 		AccountModel current = LoginModel.getInstance().getAccount();
+		userid = current.getCid();
+		System.out.println("Welcome id " + userid);
 		userLbl.setText(String.format("Welcome %s, id: %d", current.getUname(), current.getCid()));
 
 		tid.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("tid"));
 		balance.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("balanceStr"));
 
 		// auto adjust width of columns depending on their content
-		tblAccounts.setColumnResizePolicy((param) -> true);
+		tblRecords.setColumnResizePolicy((param) -> true);
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
 				updateUserBalance();
-				customResize(tblAccounts);
+				customResize(tblRecords);
 			}
 		});
-		tblAccounts.setVisible(false);
+		tblRecords.setVisible(false);
 	}
 
-	public void viewAccounts() {
-		tblAccounts.getItems().setAll(RecordHelper.getInstance().getRecords()); // load table data from ClientModel List
-		tblAccounts.setVisible(true); // set tableview to visible if not
+	public void viewRecords() {
+		tblRecords.getItems().setAll(RecordHelper.getInstance().getRecords(userid)); // load table data from ClientModel List
+		tblRecords.setVisible(true); // set tableview to visible if not
 	}
 
 	private void updateUserBalance() {
@@ -124,7 +126,7 @@ public class ClientController implements Initializable {
 							@Override
 							public void run() {
 								updateUserBalance();
-								viewAccounts();
+								viewRecords();
 							}
 						});
 					}
@@ -147,7 +149,7 @@ public class ClientController implements Initializable {
 						@Override
 						public void run() {
 							updateUserBalance();
-							viewAccounts();
+							viewRecords();
 						}
 					});
 				} catch (NumberFormatException e) {
@@ -227,7 +229,7 @@ public class ClientController implements Initializable {
 							@Override
 							public void run() {
 								updateUserBalance();
-								viewAccounts();
+								viewRecords();
 							}
 						});
 					}
@@ -237,9 +239,4 @@ public class ClientController implements Initializable {
 			}
 		});
 	}
-
-    public static void setUserid(int user_id) {
-        userid = user_id;
-        System.out.println("Welcome id " + userid);
-    }
 }

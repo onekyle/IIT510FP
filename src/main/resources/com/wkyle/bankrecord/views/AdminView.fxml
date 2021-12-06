@@ -13,6 +13,7 @@
             <Image url="@../imgs/logo.png" />
          </image>
       </ImageView>
+
       <Label fx:id="userLbl" layoutX="42.0" layoutY="20.0" styleClass="user-label" text="Admin Panel">
          <font>
             <Font size="17.0" />
@@ -21,9 +22,9 @@
 
       <Button layoutX="36.0" layoutY="75.0" mnemonicParsing="false" onAction="#viewAccounts" text="View Accounts" />
       <Button layoutX="36.0" layoutY="134.0" mnemonicParsing="false" onAction="#viewRecords" text="View Records" />
-      <Button layoutX="36.0" layoutY="191.0" mnemonicParsing="false" onAction="#addBankRec" text="Add Bank Affiliate" />
+      <Button fx:id="addBankBtn" layoutX="36.0" layoutY="191.0" mnemonicParsing="false" onAction="#addBankRec" text="Add Bank Affiliate" />
       <Button layoutX="36.0" layoutY="340.0" mnemonicParsing="false" onAction="#logout" prefHeight="27.0" prefWidth="96.0" styleClass="destroy-button" text="Logout" />
-      <Pane fx:id="paneRecords" layoutX="176.0" layoutY="75.0" prefHeight="282.0" prefWidth="375.0" visible="false">
+      <Pane fx:id="paneRecords" layoutX="176.0" layoutY="75.0" prefHeight="320.0" prefWidth="375.0" visible="false">
          <children>
             <TableView fx:id="tblRecords" prefHeight="217.0" prefWidth="375.0">
                <columns>
@@ -32,13 +33,19 @@
                   <TableColumn fx:id="recordAmount" prefWidth="265.0" text="Amount" />
                </columns>
             </TableView>
-            <FlowPane alignment="CENTER" hgap="60.0" layoutY="225.0" prefHeight="42.0" prefWidth="375.0">
+            <FlowPane alignment="CENTER" hgap="40.0" layoutY="225.0" prefHeight="42.0" prefWidth="375.0">
                <children>
+                  <Button mnemonicParsing="false" onAction="#clickFilter" prefWidth="60.0" styleClass="record-filter-btn" text="Filter" />
                   <Button mnemonicParsing="false" onAction="#addRecord" prefWidth="60.0" text="Add" />
                   <Button mnemonicParsing="false" onAction="#editRecord" prefWidth="60.0" text="Edit" />
                   <Button mnemonicParsing="false" onAction="#deleteRecord" prefWidth="60.0" styleClass="destroy-button" text="Delete" />
                </children>
             </FlowPane>
+            <Label fx:id="filteredBalance" alignment="CENTER_RIGHT" layoutX="0.0" layoutY="280" prefWidth="375.0" styleClass="ct-inner-lbl" text="Balance" visible="false" AnchorPane.bottomAnchor="35.0" AnchorPane.rightAnchor="21.0">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
          </children>
       </Pane>
       <Pane fx:id="paneAddBank" layoutX="176.0" layoutY="75.0" prefHeight="282.0" prefWidth="375.0" styleClass="division-pane">

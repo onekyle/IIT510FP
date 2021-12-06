@@ -1,6 +1,7 @@
 package com.wkyle.bankrecord.controllers;
 
 import com.wkyle.bankrecord.application.Main;
+import com.wkyle.bankrecord.models.AccountModel;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -33,9 +34,11 @@ public class Router {
 
     public static void goToAccountManagerView() {
         try {
-            AnchorPane root;
-            root = (AnchorPane) FXMLLoader.load(Router.class.getResource("/com/wkyle/bankrecord/views/AccountManager.fxml"));
-            Main.stage.setTitle("AccountManger View");
+            FXMLLoader fxmlLoader = new FXMLLoader(Router.class.getResource("/com/wkyle/bankrecord/views/AdminView.fxml"));
+            AnchorPane root = fxmlLoader.load();
+            AdminController controller = (AdminController)fxmlLoader.getController();
+            controller.setManagerType(AccountModel.RoleType.ACCOUNT_MANAGER);
+            Main.stage.setTitle("Admin View");
             Scene scene = new Scene(root);
             addCssForScene(scene);
             Main.stage.setScene(scene);
@@ -48,9 +51,6 @@ public class Router {
         try {
             AnchorPane root;
             root = (AnchorPane) FXMLLoader.load(Router.class.getResource("/com/wkyle/bankrecord/views/ClientView.fxml"));
-            // ***Set user ID acquired from db****
-            int user_id = cid;
-            ClientController.setUserid(user_id);
             Main.stage.setTitle("Client View");
             Scene scene = new Scene(root);
             addCssForScene(scene);

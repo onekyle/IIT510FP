@@ -1,6 +1,7 @@
 package com.wkyle.bankrecord.controllers;
 
 import java.net.URL;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.function.Function;
 
@@ -10,8 +11,10 @@ import com.wkyle.bankrecord.Dao.LoginModel;
 import com.wkyle.bankrecord.Dao.RecordHelper;
 import com.wkyle.bankrecord.models.*;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
@@ -25,10 +28,15 @@ public class AdminController implements Initializable {
     @FXML
     private Pane paneAccounts;
     @FXML
+    private Label userLbl;
+    @FXML
+    private Label filteredBalance;
+    @FXML
     private TextField txtName;
     @FXML
     private TextField txtAddress;
-
+    @FXML
+    private Button addBankBtn;
 
     @FXML
     private TableView<AccountModel> tblAccounts;
@@ -48,13 +56,32 @@ public class AdminController implements Initializable {
     @FXML
     private TableColumn<ClientModel, String> recordAmount;
 
+    public void setManagerType(AccountModel.RoleType managerType) {
+        switch (managerType) {
+            case CUSTOMER:
+                throw new IllegalArgumentException("AdminViewController manager type can't be CUSTOMER");
+            case ADMIN:
+                this.addBankBtn.setVisible(true);
+                this.userLbl.setText("Admin Panel");
+                break;
+            case ACCOUNT_MANAGER:
+                this.addBankBtn.setVisible(false);
+                AccountModel current = LoginModel.getInstance().getAccount();
+                userLbl.setText(String.format("Welcome %s, id: %d", current.getUname(), current.getCid()));
+                break;
+        }
+        this.managerType = managerType;
+    }
+
+    private AccountModel.RoleType managerType = AccountModel.RoleType.ADMIN;
+
     AdminModel adminModel = null;
 
     public void initialize(URL location, ResourceBundle resources) {
         accountID.setCellValueFactory(new PropertyValueFactory<AccountModel, String>("cid"));
         accountName.setCellValueFactory(new PropertyValueFactory<AccountModel, String>("uname"));
         roleType.setCellValueFactory(new PropertyValueFactory<AccountModel, String>("roleTypeString"));
-        viewAccounts();
+        Platform.runLater(() -> viewAccounts());
 
         recordTid.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("tid"));
         recordCid.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("cid"));
@@ -92,6 +119,48 @@ public class AdminController implements Initializable {
     public void logout() {
         LoginModel.getInstance().logout();
         Router.goToLoginView();
+    }
+
+    public void clickFilter() {
+        TextInputDialog dialog = new TextInputDialog("");
+        dialog.setTitle("Filter");
+        dialog.setHeaderText("Filter records by cid:");
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(cid -> {
+            Boolean flag = false;
+            try {
+                int intCid = Integer.parseInt(cid);
+                if (intCid >= 0) {
+                    flag = true;
+                    filterByCid(intCid);
+                }
+            } catch (Exception e) {
+
+            }
+            if (flag == false) {
+                DialogController.showErrorDialog("Error", "Please check your input cid");
+            }
+        });
+    }
+
+    private void filterByCid(int cid) {
+        List<ClientModel> records = RecordHelper.getInstance().getRecords(cid);
+        tblRecords.getItems().setAll(records);
+        if (records.size() > 0) {
+            filteredBalance.setVisible(true);
+            double sum = 0;
+            for (int i = 0; i < records.size(); i++) {
+                ClientModel model = records.get(i);
+                sum += model.getBalance();
+            }
+            updateUserBalance(cid,sum);
+        } else {
+            filteredBalance.setVisible(false);
+        }
+    }
+    private void updateUserBalance(int cid, double balance) {
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
+        filteredBalance.setText(String.format("Cid: %d, Balance:  %s", cid,numberFormat.format(balance)));
     }
 
     public void addAccount() {
@@ -166,6 +235,9 @@ public class AdminController implements Initializable {
 
     public void editRecord() {
         ClientModel model = tblRecords.getSelectionModel().getSelectedItem();
+        if (model == null) {
+            return;
+        }
         DialogController.recordInfoInputDialog("Add Record", model, new Function<ClientModel, ClientModel>() {
             @Override
             public ClientModel apply(ClientModel clientModel) {
@@ -187,10 +259,11 @@ public class AdminController implements Initializable {
     }
 
     private void updateAccountTableData() {
-        tblAccounts.getItems().setAll(AccountHelper.getInstance().getAccounts(AccountModel.RoleType.ADMIN));
+        tblAccounts.getItems().setAll(AccountHelper.getInstance().getAccounts(managerType));
     }
 
     private void updateRecordTableData() {
-        tblRecords.getItems().setAll(RecordHelper.getInstance().getRecords());
+        filteredBalance.setVisible(false);
+        tblRecords.getItems().setAll(RecordHelper.getInstance().getRecords(-1));
     }
 }

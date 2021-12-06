@@ -26,6 +26,10 @@
     -fx-background-color: LightSalmon;
 }
 
+.record-filter-btn:focused {
+    -fx-background-color: green;
+}
+
 .user-label {
     -fx-text-fill: #fefefe;
 }
