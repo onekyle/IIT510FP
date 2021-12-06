@@ -102,7 +102,7 @@ public class ClientController implements Initializable {
 		Optional<String> result = dialog.showAndWait();
 		if (result.isPresent()) {
 			System.out.println("Balance entry: " + result.get());
-			RecordHelper.getInstance().updateRecord(userid, Double.parseDouble(result.get()));
+			RecordHelper.getInstance().updateBalance(userid, Double.parseDouble(result.get()));
 		}
 
 		// The Java 8 way to get the response value (with lambda expression).
@@ -119,7 +119,7 @@ public class ClientController implements Initializable {
 					if (value <= 0) {
 						DialogController.showErrorDialog("Input invalid", "Please check and re-enter");
 					} else {
-						RecordHelper.getInstance().updateRecord(userid, value);
+						RecordHelper.getInstance().updateBalance(userid, value);
 						Platform.runLater(new Runnable() {
 							@Override
 							public void run() {
@@ -222,7 +222,7 @@ public class ClientController implements Initializable {
 					int cid = Integer.parseInt(name);
 					Boolean flag = RecordHelper.getInstance().withdraw(userid, doubleAmount);
 					if (flag) {
-						RecordHelper.getInstance().updateRecord(cid, doubleAmount);
+						RecordHelper.getInstance().updateBalance(cid, doubleAmount);
 						Platform.runLater(new Runnable() {
 							@Override
 							public void run() {

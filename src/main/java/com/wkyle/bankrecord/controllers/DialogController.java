@@ -32,6 +32,8 @@ public class DialogController {
         alert.show();
     }
 
+
+
     public static TextInputDialog showInputDialog(String title, String header, String content, String placeholder, Function<String, String> callBack) {
         TextInputDialog dialog = new TextInputDialog(placeholder);
         dialog.setTitle(title);

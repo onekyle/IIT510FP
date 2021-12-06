@@ -70,25 +70,43 @@ public class RecordHelper {
             DialogController.showErrorDialog("Lack of balance", String.format("You have %.2f in your account, please retry", remainBalance));
             return false;
         } else {
-            RecordHelper.getInstance().updateRecord(cid, -balance);
+            RecordHelper.getInstance().updateBalance(cid, -balance);
         }
         return true;
     }
 
-    public Boolean updateRecord(int cid, double balance) {
+    public Boolean updateBalance(int cid, double amount) {
         if (AccountHelper.getInstance().getAccount(cid, null) == null) {
-            DialogController.showErrorDialog("Update Record Failed", "");
+            DialogController.showErrorDialog("Update Record Failed", "User doesn't exits.");
             return false;
         }
         try {
             PreparedStatement stmt = connect.getConnection().prepareStatement("INSERT INTO brs2021_accounts(cid,balance,create_time) VALUES (?,?,?)");
             stmt.setInt(1, cid);
-            stmt.setDouble(2, balance);
+            stmt.setDouble(2, amount);
             Timestamp date = new Timestamp(System.currentTimeMillis());
             stmt.setTimestamp(3, date);
             int ret = stmt.executeUpdate();
             if (ret == 1) {
                 return true;
+            }
+        } catch (SQLException se) {
+            se.printStackTrace();
+            DialogController.showErrorDialog("Update Record Failed", se.toString());
+        }
+        return false;
+    }
+
+    public Boolean updateRecord(int tid, double amount) {
+        String query = String.format("UPDATE brs2021_accounts SET balance=%f WHERE tid=%d", amount,tid);
+        try {
+            Statement stmt = connect.getConnection().createStatement();
+            int ret = stmt.executeUpdate(query);
+            if (ret == 1) {
+                DialogController.showInfoDialog("", "Update Record Success", "");
+                return true;
+            } else {
+                DialogController.showErrorDialog("Update Record Failed", "Record doesn't exist.");
             }
         } catch (SQLException se) {
             se.printStackTrace();
@@ -103,6 +121,7 @@ public class RecordHelper {
             Statement stmt = connect.getConnection().createStatement();
             int ret = stmt.executeUpdate(query);
             if (ret == 1) {
+                DialogController.showInfoDialog("", "Delete Record Success", "");
                 return true;
             } else {
                 DialogController.showErrorDialog("Delete Record Failed", "Record doesn't exist.");

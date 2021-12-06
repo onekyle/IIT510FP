@@ -20,7 +20,7 @@
       <Button layoutX="34.0" layoutY="73.0" mnemonicParsing="false" onAction="#viewAccounts" text="View Accounts" />
       <Button layoutX="325.0" layoutY="73.0" mnemonicParsing="false" onAction="#createTransaction" prefHeight="27.0" text="Create Transactions" visible="false" AnchorPane.rightAnchor="90.0" />
       <Button layoutX="34.0" layoutY="337.0" mnemonicParsing="false" onAction="#logout" prefHeight="27.0" prefWidth="70.0" styleClass="destroy-button" text="Logout" />
-      <TableView fx:id="tblAccounts" layoutX="183.0" layoutY="72.0" prefHeight="248.0" prefWidth="348.0" AnchorPane.bottomAnchor="80.0" AnchorPane.rightAnchor="20.0">
+      <TableView fx:id="tblAccounts" layoutX="183.0" layoutY="72.0" prefHeight="248.0" prefWidth="348.0" AnchorPane.bottomAnchor="80.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="72.0">
         <columns>
           <TableColumn fx:id="tid" prefWidth="50.0" text="tid" />
           <TableColumn fx:id="balance" prefWidth="156.0" text="cash flow" />

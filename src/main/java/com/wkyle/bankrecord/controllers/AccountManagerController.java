@@ -87,11 +87,7 @@ public class AccountManagerController implements Initializable {
         if (recordID == null || recordID.isEmpty() || recordBalance == null || recordBalance.isEmpty()) {
             DialogController.showErrorDialog("Input invalid", "Please check and re-enter.");
         } else {
-            try {
-                RecordHelper.getInstance().updateRecord(Integer.parseInt(recordID), Double.parseDouble(recordBalance));
-            } catch (NumberFormatException e) {
-                DialogController.showErrorDialog("Input invalid", e.toString());
-            }
+            Boolean flag = RecordHelper.getInstance().updateBalance(Integer.parseInt(recordID), Double.parseDouble(recordBalance));
         }
     }
 
@@ -101,11 +97,7 @@ public class AccountManagerController implements Initializable {
         if (tid == null || tid.isEmpty()) {
             DialogController.showErrorDialog("Input invalid", "Please check and re-enter.");
         } else {
-            try {
-                RecordHelper.getInstance().deleteRecord(Integer.parseInt(tid));
-            } catch (NumberFormatException e) {
-                DialogController.showErrorDialog("Input invalid", e.toString());
-            }
+            RecordHelper.getInstance().deleteRecord(Integer.parseInt(tid));
         }
     }
 

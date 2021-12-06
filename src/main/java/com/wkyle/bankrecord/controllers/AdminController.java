@@ -7,6 +7,7 @@ import java.util.function.Function;
 import com.wkyle.bankrecord.Dao.AccountHelper;
 import com.wkyle.bankrecord.Dao.AdminModel;
 import com.wkyle.bankrecord.Dao.LoginModel;
+import com.wkyle.bankrecord.Dao.RecordHelper;
 import com.wkyle.bankrecord.models.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -100,11 +101,7 @@ public class AdminController implements Initializable {
         if (recordID == null || recordID.isEmpty() || recordBalance == null || recordBalance.isEmpty()) {
             DialogController.showErrorDialog("Input invalid", "Please check and re-enter.");
         } else {
-            try {
-                adminModel.updateBank(recordID, recordBalance);
-            } catch (NumberFormatException e) {
-                DialogController.showErrorDialog("Input invalid", e.toString());
-            }
+            RecordHelper.getInstance().updateRecord(Integer.parseInt(recordID), Double.parseDouble(recordBalance));
         }
     }
 
@@ -115,7 +112,7 @@ public class AdminController implements Initializable {
             DialogController.showErrorDialog("Input invalid", "Please check and re-enter.");
         } else {
             try {
-                adminModel.deleteBank(tid);
+                RecordHelper.getInstance().deleteRecord(Integer.parseInt(tid));
             } catch (NumberFormatException e) {
                 DialogController.showErrorDialog("Input invalid", e.toString());
             }
