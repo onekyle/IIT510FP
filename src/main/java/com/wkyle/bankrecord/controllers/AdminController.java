@@ -238,7 +238,7 @@ public class AdminController implements Initializable {
         if (model == null) {
             return;
         }
-        DialogController.recordInfoInputDialog("Add Record", model, new Function<ClientModel, ClientModel>() {
+        DialogController.recordInfoInputDialog("Edit Record", model, new Function<ClientModel, ClientModel>() {
             @Override
             public ClientModel apply(ClientModel clientModel) {
                 Boolean flag = RecordHelper.getInstance().updateRecord(model.getTid(), clientModel.getBalance());

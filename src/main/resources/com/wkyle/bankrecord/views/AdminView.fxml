@@ -24,16 +24,16 @@
       <Button layoutX="36.0" layoutY="134.0" mnemonicParsing="false" onAction="#viewRecords" text="View Records" />
       <Button fx:id="addBankBtn" layoutX="36.0" layoutY="191.0" mnemonicParsing="false" onAction="#addBankRec" text="Add Bank Affiliate" />
       <Button layoutX="36.0" layoutY="340.0" mnemonicParsing="false" onAction="#logout" prefHeight="27.0" prefWidth="96.0" styleClass="destroy-button" text="Logout" />
-      <Pane fx:id="paneRecords" layoutX="176.0" layoutY="75.0" prefHeight="320.0" prefWidth="375.0" visible="false">
+      <AnchorPane fx:id="paneRecords" layoutX="176.0" layoutY="75.0" prefHeight="320.0" prefWidth="400.0" visible="false" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="28.0" AnchorPane.topAnchor="75.0">
          <children>
-            <TableView fx:id="tblRecords" prefHeight="217.0" prefWidth="375.0">
+            <TableView fx:id="tblRecords" prefHeight="217.0" prefWidth="400.0" AnchorPane.bottomAnchor="103.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <columns>
                   <TableColumn fx:id="recordTid" prefWidth="60.0" text="Tid" />
                   <TableColumn fx:id="recordCid" prefWidth="50.0" text="Cid" />
-                  <TableColumn fx:id="recordAmount" prefWidth="265.0" text="Amount" />
+                  <TableColumn fx:id="recordAmount" prefWidth="215.0" text="Amount" />
                </columns>
             </TableView>
-            <FlowPane alignment="CENTER" hgap="40.0" layoutY="225.0" prefHeight="42.0" prefWidth="375.0">
+            <FlowPane alignment="CENTER" hgap="40.0" layoutY="225.0" prefHeight="42.0" prefWidth="400.0" AnchorPane.bottomAnchor="53.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="21.0">
                <children>
                   <Button mnemonicParsing="false" onAction="#clickFilter" prefWidth="60.0" styleClass="record-filter-btn" text="Filter" />
                   <Button mnemonicParsing="false" onAction="#addRecord" prefWidth="60.0" text="Add" />
@@ -41,13 +41,13 @@
                   <Button mnemonicParsing="false" onAction="#deleteRecord" prefWidth="60.0" styleClass="destroy-button" text="Delete" />
                </children>
             </FlowPane>
-            <Label fx:id="filteredBalance" alignment="CENTER_RIGHT" layoutX="0.0" layoutY="280" prefWidth="375.0" styleClass="ct-inner-lbl" text="Balance" visible="false" AnchorPane.bottomAnchor="35.0" AnchorPane.rightAnchor="21.0">
+            <Label fx:id="filteredBalance" alignment="CENTER_RIGHT" layoutX="0.0" layoutY="280" prefWidth="375.0" styleClass="ct-inner-lbl" text="Balance" visible="false" AnchorPane.bottomAnchor="21.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
          </children>
-      </Pane>
+      </AnchorPane>
       <Pane fx:id="paneAddBank" layoutX="176.0" layoutY="75.0" prefHeight="282.0" prefWidth="375.0" styleClass="division-pane">
          <effect>
             <Glow level="0.0" />
