@@ -9,30 +9,30 @@ import java.util.Iterator;
 public class ResultSetPrinter {
     public static void printResultSet(ResultSet rs) throws SQLException {
         ResultSetMetaData resultSetMetaData = rs.getMetaData();
-        // 获取列数
+        // Get the number of columns
         int ColumnCount = resultSetMetaData.getColumnCount();
-        // 保存当前列最大长度的数组
+        // Save the array with the maximum length of the current column
         int[] columnMaxLengths = new int[ColumnCount];
-        // 缓存结果集,结果集可能有序,所以用ArrayList保存变得打乱顺序.
+        // Caching the result set, the result set may be ordered, so saving with ArrayList becomes disordered.
         ArrayList<String[]> results = new ArrayList<>();
-        // 按行遍历
+        // Traverse by line
         while (rs.next()) {
-            // 保存当前行所有列
+            // Save all columns in the current row
             String[] columnStr = new String[ColumnCount];
             // 获取属性值.
             for (int i = 0; i < ColumnCount; i++) {
-                // 获取一列
+                // Get the attribute value.
                 columnStr[i] = rs.getString(i + 1);
-                // 计算当前列的最大长度
+                // Calculate the maximum length of the current column
                 columnMaxLengths[i] = Math.max(columnMaxLengths[i], (columnStr[i] == null) ? 0 : columnStr[i].length());
             }
-            // 缓存这一行.
+            // Cache this line.
             results.add(columnStr);
         }
         printSeparator(columnMaxLengths);
         printColumnName(resultSetMetaData, columnMaxLengths);
         printSeparator(columnMaxLengths);
-        // 遍历集合输出结果
+        // Traverse the collection output result
         Iterator<String[]> iterator = results.iterator();
         String[] columnStr;
         while (iterator.hasNext()) {
@@ -47,10 +47,10 @@ public class ResultSetPrinter {
     }
 
     /**
-     * 输出列名.
+     * Output column names.
      *
-     * @param resultSetMetaData 结果集的元数据对象.
-     * @param columnMaxLengths  每一列最大长度的字符串的长度.
+     * @param resultSetMetaData The metadata object of the result set.
+     * @param columnMaxLengths  The length of the maximum length string in each column.
      * @throws SQLException
      */
     private static void printColumnName(ResultSetMetaData resultSetMetaData, int[] columnMaxLengths) throws SQLException {
@@ -63,9 +63,9 @@ public class ResultSetPrinter {
     }
 
     /**
-     * 输出分隔符.
+     * Output separator.
      *
-     * @param columnMaxLengths 保存结果集中每一列的最长的字符串的长度.
+     * @param columnMaxLengths Save the length of the longest string in each column of the result set.
      */
     private static void printSeparator(int[] columnMaxLengths) {
         for (int i = 0; i < columnMaxLengths.length; i++) {

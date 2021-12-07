@@ -23,21 +23,21 @@ import javafx.util.Pair;
 
 
 public class FundsOperateController implements Initializable {
-	
-	private int userid;
-	@FXML
-	private Label userBalance;
-	@FXML
-	private Label userLbl;
-	
-	/***** TABLEVIEW intel *********************************************************************/
 
-	@FXML
-	private TableView<FundsRecordModel> tblRecords;
-	@FXML
-	private TableColumn<FundsRecordModel, String> tid;
-	@FXML
-	private TableColumn<FundsRecordModel, String> balance;
+    private int userid;
+    @FXML
+    private Label userBalance;
+    @FXML
+    private Label userLbl;
+
+    /***** TABLEVIEW intel *********************************************************************/
+
+    @FXML
+    private TableView<FundsRecordModel> tblRecords;
+    @FXML
+    private TableColumn<FundsRecordModel, String> tid;
+    @FXML
+    private TableColumn<FundsRecordModel, String> balance;
 
     public void customResize(TableView<?> view) {
 
@@ -49,116 +49,117 @@ public class FundsOperateController implements Initializable {
 
         if (tableWidth > width.get()) {
             view.getColumns().forEach(col -> {
-                col.setPrefWidth(col.getWidth()+((tableWidth-width.get())/view.getColumns().size()));
+                col.setPrefWidth(col.getWidth() + ((tableWidth - width.get()) / view.getColumns().size()));
             });
         }
     }
-	/***** End TABLEVIEW intel *********************************************************************/
 
-	public void initialize(URL location, ResourceBundle resources) {
-		AccountModel current = LoginModel.getInstance().getAccount();
-		userid = current.getCid();
-		System.out.println("Welcome id " + userid);
-		userLbl.setText(String.format("Welcome %s, id: %d", current.getUname(), current.getCid()));
+    /***** End TABLEVIEW intel *********************************************************************/
 
-		tid.setCellValueFactory(new PropertyValueFactory<FundsRecordModel, String>("tid"));
-		balance.setCellValueFactory(new PropertyValueFactory<FundsRecordModel, String>("balanceStr"));
+    public void initialize(URL location, ResourceBundle resources) {
+        AccountModel current = LoginModel.getInstance().getAccount();
+        userid = current.getCid();
+        System.out.println("Welcome id " + userid);
+        userLbl.setText(String.format("Welcome %s, id: %d", current.getUname(), current.getCid()));
 
-		// auto adjust width of columns depending on their content
-		tblRecords.setColumnResizePolicy((param) -> true);
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				updateUserBalance();
-				customResize(tblRecords);
-			}
-		});
-		tblRecords.setVisible(false);
-	}
+        tid.setCellValueFactory(new PropertyValueFactory<FundsRecordModel, String>("tid"));
+        balance.setCellValueFactory(new PropertyValueFactory<FundsRecordModel, String>("balanceStr"));
 
-	public void viewRecords() {
-		tblRecords.getItems().setAll(RecordHelper.getInstance().getRecords(userid)); // load table data from FundsRecordModel List
-		tblRecords.setVisible(true); // set tableview to visible if not
-	}
+        // auto adjust width of columns depending on their content
+        tblRecords.setColumnResizePolicy((param) -> true);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                updateUserBalance();
+                customResize(tblRecords);
+            }
+        });
+        tblRecords.setVisible(false);
+    }
 
-	private void updateUserBalance() {
-		double balance = RecordHelper.getInstance().getBalance(userid);
+    public void viewRecords() {
+        tblRecords.getItems().setAll(RecordHelper.getInstance().getRecords(userid)); // load table data from FundsRecordModel List
+        tblRecords.setVisible(true); // set tableview to visible if not
+    }
 
-		NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
-		userBalance.setText(String.format("Balance:  %s", numberFormat.format(balance)));
-	}
+    private void updateUserBalance() {
+        double balance = RecordHelper.getInstance().getBalance(userid);
 
-	public void logout() {
-		LoginModel.getInstance().logout();
-		Router.goToLoginView();
-	}
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
+        userBalance.setText(String.format("Balance:  %s", numberFormat.format(balance)));
+    }
 
-	public void createTransaction() {
+    public void logout() {
+        LoginModel.getInstance().logout();
+        Router.goToLoginView();
+    }
 
-		TextInputDialog dialog = new TextInputDialog("Enter dollar amount");
-		dialog.setTitle("Bank Account Entry Portal");
-		dialog.setHeaderText("Enter Transaction");
-		dialog.setContentText("Please enter your balance:");
+    public void createTransaction() {
 
-		// Traditional way to get the response value.
-		Optional<String> result = dialog.showAndWait();
-		if (result.isPresent()) {
-			System.out.println("Balance entry: " + result.get());
-			RecordHelper.getInstance().updateBalance(userid, Double.parseDouble(result.get()));
-		}
+        TextInputDialog dialog = new TextInputDialog("Enter dollar amount");
+        dialog.setTitle("Bank Account Entry Portal");
+        dialog.setHeaderText("Enter Transaction");
+        dialog.setContentText("Please enter your balance:");
 
-		// The Java 8 way to get the response value (with lambda expression).
-		result.ifPresent(balance -> System.out.println("Balance entry: " + balance));
+        // Traditional way to get the response value.
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            System.out.println("Balance entry: " + result.get());
+            RecordHelper.getInstance().updateBalance(userid, Double.parseDouble(result.get()));
+        }
 
-	}
+        // The Java 8 way to get the response value (with lambda expression).
+        result.ifPresent(balance -> System.out.println("Balance entry: " + balance));
 
-	public void onDeposit() {
-		DialogController.showInputDialog("Deposit", null, "Please enter the amount you want to deposit:", null, new Function<String, String>() {
-			@Override
-			public String apply(String s) {
-				try {
-					double value = Double.parseDouble(s);
-					if (value <= 0) {
-						DialogController.showErrorDialog("Input invalid", "Please check and re-enter");
-					} else {
-						RecordHelper.getInstance().updateBalance(userid, value);
-						Platform.runLater(new Runnable() {
-							@Override
-							public void run() {
-								updateUserBalance();
-								viewRecords();
-							}
-						});
-					}
-				} catch (NumberFormatException e) {
-					DialogController.showErrorDialog("Input invalid", "Please check and re-enter");
-				}
-				return s;
-			}
-		});
-	}
+    }
 
-	public void onWithdraw() {
-		DialogController.showInputDialog("Withdraw", null, "Please enter the amount you want to withdraw:", null, new Function<String, String>() {
-			@Override
-			public String apply(String s) {
-				try {
-					double value = Double.parseDouble(s);
-					RecordHelper.getInstance().withdraw(userid, value);
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							updateUserBalance();
-							viewRecords();
-						}
-					});
-				} catch (NumberFormatException e) {
-					DialogController.showErrorDialog("Input invalid", "Please check and re-enter");
-				}
-				return s;
-			}
-		});
-	}
+    public void onDeposit() {
+        DialogController.showInputDialog("Deposit", null, "Please enter the amount you want to deposit:", null, new Function<String, String>() {
+            @Override
+            public String apply(String s) {
+                try {
+                    double value = Double.parseDouble(s);
+                    if (value <= 0) {
+                        DialogController.showErrorDialog("Input invalid", "Please check and re-enter");
+                    } else {
+                        RecordHelper.getInstance().updateBalance(userid, value);
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                updateUserBalance();
+                                viewRecords();
+                            }
+                        });
+                    }
+                } catch (NumberFormatException e) {
+                    DialogController.showErrorDialog("Input invalid", "Please check and re-enter");
+                }
+                return s;
+            }
+        });
+    }
+
+    public void onWithdraw() {
+        DialogController.showInputDialog("Withdraw", null, "Please enter the amount you want to withdraw:", null, new Function<String, String>() {
+            @Override
+            public String apply(String s) {
+                try {
+                    double value = Double.parseDouble(s);
+                    RecordHelper.getInstance().withdraw(userid, value);
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateUserBalance();
+                            viewRecords();
+                        }
+                    });
+                } catch (NumberFormatException e) {
+                    DialogController.showErrorDialog("Input invalid", "Please check and re-enter");
+                }
+                return s;
+            }
+        });
+    }
 
     public void onTransfer() {
         // Create the custom dialog.
@@ -210,33 +211,33 @@ public class FundsOperateController implements Initializable {
             return null;
         });
 
-		Optional<Pair<String, String>> result = dialog.showAndWait();
+        Optional<Pair<String, String>> result = dialog.showAndWait();
 
-		result.ifPresent(resultPair -> {
+        result.ifPresent(resultPair -> {
 
-			String name = resultPair.getKey();
-			String transferAmount = resultPair.getValue();
-			if (name == null || name.isEmpty() || transferAmount == null || transferAmount.isEmpty()) {
-				DialogController.showErrorDialog("Input invalid", "Please check and re-enter.");
-			} else {
-				try {
-					double doubleAmount = Double.parseDouble(transferAmount);
-					int cid = Integer.parseInt(name);
-					Boolean flag = RecordHelper.getInstance().withdraw(userid, doubleAmount);
-					if (flag) {
-						RecordHelper.getInstance().updateBalance(cid, doubleAmount);
-						Platform.runLater(new Runnable() {
-							@Override
-							public void run() {
-								updateUserBalance();
-								viewRecords();
-							}
-						});
-					}
-				} catch (NumberFormatException e) {
-					DialogController.showErrorDialog("Input invalid", e.toString());
-				}
-			}
-		});
-	}
+            String name = resultPair.getKey();
+            String transferAmount = resultPair.getValue();
+            if (name == null || name.isEmpty() || transferAmount == null || transferAmount.isEmpty()) {
+                DialogController.showErrorDialog("Input invalid", "Please check and re-enter.");
+            } else {
+                try {
+                    double doubleAmount = Double.parseDouble(transferAmount);
+                    int cid = Integer.parseInt(name);
+                    Boolean flag = RecordHelper.getInstance().withdraw(userid, doubleAmount);
+                    if (flag) {
+                        RecordHelper.getInstance().updateBalance(cid, doubleAmount);
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                updateUserBalance();
+                                viewRecords();
+                            }
+                        });
+                    }
+                } catch (NumberFormatException e) {
+                    DialogController.showErrorDialog("Input invalid", e.toString());
+                }
+            }
+        });
+    }
 }

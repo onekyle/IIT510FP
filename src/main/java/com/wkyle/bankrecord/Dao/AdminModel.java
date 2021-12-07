@@ -32,7 +32,7 @@ public class AdminModel {
 
             PreparedStatement stmt = conn.getConnection().prepareStatement("insert into brs2021_bank(name,address,create_time) VALUES (?,?,?)");
             stmt.setString(1, name);
-            stmt.setString(2,address);
+            stmt.setString(2, address);
             Timestamp date = new Timestamp(System.currentTimeMillis());
             stmt.setTimestamp(3, date);
             int ret = stmt.executeUpdate();

@@ -106,7 +106,7 @@ public class RecordHelper {
     }
 
     public Boolean updateRecord(int tid, double amount) {
-        String query = String.format("UPDATE brs2021_accounts SET balance=%f WHERE tid=%d", amount,tid);
+        String query = String.format("UPDATE brs2021_accounts SET balance=%f WHERE tid=%d", amount, tid);
         try {
             Statement stmt = connect.getConnection().createStatement();
             int ret = stmt.executeUpdate(query);
@@ -156,14 +156,14 @@ public class RecordHelper {
                 "(tid INTEGER not NULL AUTO_INCREMENT, " +
                 " cid int, " +
                 " balance numeric(38,2), " +
-                "create_time datetime,"+
+                "create_time datetime," +
                 " PRIMARY KEY ( tid ))";
 
         String createBankTable = "CREATE TABLE IF NOT EXISTS brs2021_bank " +
                 "(id INTEGER not NULL AUTO_INCREMENT, " +
                 " name VARCHAR(255), " +
                 " address VARCHAR(255), " +
-                "create_time datetime,"+
+                "create_time datetime," +
                 " PRIMARY KEY ( id ))";
         try {
             Statement stmt = connect.getConnection().createStatement();

@@ -5,13 +5,13 @@ import java.sql.*;
 import com.wkyle.bankrecord.models.AccountModel;
 import com.wkyle.bankrecord.utils.HashSHAUtils;
 
-public class LoginModel  {
+public class LoginModel {
 
     private static LoginModel instance = new LoginModel();
     DBConnect conn = null;
 
     private LoginModel() {
-         conn = new DBConnect();
+        conn = new DBConnect();
     }
 
     public static LoginModel getInstance() {
@@ -48,10 +48,10 @@ public class LoginModel  {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
-           if(null!= conn.getConnection()){
-               conn.getConnection();
-           }
+        } finally {
+            if (null != conn.getConnection()) {
+                conn.getConnection();
+            }
         }
         return false;
     }
