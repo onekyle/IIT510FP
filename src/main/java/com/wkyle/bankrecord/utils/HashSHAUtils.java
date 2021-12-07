@@ -17,8 +17,6 @@ public class HashSHAUtils {
             sbHash.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
         }
 
-//        System.out.println("Hash password created => " + sbHash.toString());
-//        System.out.println(sbHash.toString().length());
         return sbHash.toString();
     }
 
