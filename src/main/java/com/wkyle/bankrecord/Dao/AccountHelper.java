@@ -145,7 +145,7 @@ public class AccountHelper {
             ResultSet resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
                 AccountModel account = new AccountModel();
-                // grab record data by table field name into ClientModel account object
+                // grab record data by table field name into FundsRecordModel account object
                 account.setCid(resultSet.getInt("id"));
                 account.setUname(resultSet.getString("uname"));
                 account.setPasswdEncrypted(resultSet.getString("passwd"));

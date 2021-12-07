@@ -3,12 +3,12 @@ package com.wkyle.bankrecord.models;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-public class ClientModel {
+public class FundsRecordModel {
 
-	private int cid;
-	private int tid;
-	private double balance;
-	private String balanceStr;
+    private int cid;
+    private int tid;
+    private double balance;
+    private String balanceStr;
 
     /* getters & setters */
     public int getCid() {
@@ -31,13 +31,13 @@ public class ClientModel {
         return balance;
     }
 
-	public void setBalance(Double balance) {
-		NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.US);
-		this.balanceStr = nf.format(balance);
-		this.balance = balance;
-	}
+    public void setBalance(Double balance) {
+        NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.US);
+        this.balanceStr = nf.format(balance);
+        this.balance = balance;
+    }
 
-	public String getBalanceStr() {
-		return this.balanceStr;
-	}
+    public String getBalanceStr() {
+        return this.balanceStr;
+    }
 }

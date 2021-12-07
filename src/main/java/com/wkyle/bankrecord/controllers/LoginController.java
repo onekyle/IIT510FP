@@ -68,10 +68,10 @@ public class LoginController {
             // If user is admin, inflate admin view
             Router.goToAdminView();
         } else if (model.getAccount().getRoleType() == AccountModel.RoleType.ACCOUNT_MANAGER) {
-            Router.goToAccountManagerView();
+            Router.goToManagerView();
         } else {
             // If user is customer, inflate customer view
-            Router.goToClientView(model.getId());
+            Router.goToFundsOperateView(model.getId());
         }
     }
 }

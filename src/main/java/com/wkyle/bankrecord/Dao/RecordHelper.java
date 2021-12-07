@@ -1,8 +1,7 @@
 package com.wkyle.bankrecord.Dao;
 
 import com.wkyle.bankrecord.controllers.DialogController;
-import com.wkyle.bankrecord.models.AccountModel;
-import com.wkyle.bankrecord.models.ClientModel;
+import com.wkyle.bankrecord.models.FundsRecordModel;
 import com.wkyle.bankrecord.utils.HashSHAUtils;
 
 import java.sql.*;
@@ -26,18 +25,18 @@ public class RecordHelper {
     /*
      * cid: -1 for all users records.
      */
-    public List<ClientModel> getRecords(int cid) {
+    public List<FundsRecordModel> getRecords(int cid) {
         String query = "SELECT tid,cid,balance FROM brs2021_accounts";
         if (cid != -1) {
             query += (" WHERE cid = " + cid + ";");
         }
-        List<ClientModel> accounts = new ArrayList<>();
+        List<FundsRecordModel> accounts = new ArrayList<>();
         try {
             Statement stmt = connect.getConnection().createStatement();
             ResultSet resultSet = stmt.executeQuery(query);
             while (resultSet.next()) {
-                ClientModel account = new ClientModel();
-                // grab record data by table field name into ClientModel account object
+                FundsRecordModel account = new FundsRecordModel();
+                // grab record data by table field name into FundsRecordModel account object
                 account.setCid(resultSet.getInt("cid"));
                 account.setTid(resultSet.getInt("tid"));
                 account.setBalance(resultSet.getDouble("balance"));

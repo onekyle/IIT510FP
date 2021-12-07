@@ -1,7 +1,7 @@
 package com.wkyle.bankrecord.controllers;
 
 import com.wkyle.bankrecord.models.AccountModel;
-import com.wkyle.bankrecord.models.ClientModel;
+import com.wkyle.bankrecord.models.FundsRecordModel;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -32,7 +32,6 @@ public class DialogController {
         alert.setContentText(content);
         alert.show();
     }
-
 
 
     public static TextInputDialog showInputDialog(String title, String header, String content, String placeholder, Function<String, String> callBack) {
@@ -138,9 +137,9 @@ public class DialogController {
         return dialog;
     }
 
-    public static Dialog<ClientModel> recordInfoInputDialog(String title, ClientModel placeHolder, Function<ClientModel, ClientModel> callback) {
+    public static Dialog<FundsRecordModel> recordInfoInputDialog(String title, FundsRecordModel placeHolder, Function<FundsRecordModel, FundsRecordModel> callback) {
         // Create the custom dialog.
-        Dialog<ClientModel> dialog = new Dialog<>();
+        Dialog<FundsRecordModel> dialog = new Dialog<>();
         dialog.setTitle(title == null ? "Add Record" : title);
 
         // Set the button types.
@@ -190,7 +189,7 @@ public class DialogController {
         // Convert the result to a username-password-pair when the login button is clicked.
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == addButtonType) {
-                ClientModel model = new ClientModel();
+                FundsRecordModel model = new FundsRecordModel();
                 if (placeHolder != null) {
                     model.setTid(placeHolder.getTid());
                 }
@@ -201,7 +200,7 @@ public class DialogController {
             return null;
         });
 
-        Optional<ClientModel> result = dialog.showAndWait();
+        Optional<FundsRecordModel> result = dialog.showAndWait();
 
         result.ifPresent(resultModel -> {
             if (placeHolder != null) {

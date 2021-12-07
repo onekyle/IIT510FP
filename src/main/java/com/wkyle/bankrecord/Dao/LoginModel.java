@@ -5,11 +5,13 @@ import java.sql.*;
 import com.wkyle.bankrecord.models.AccountModel;
 import com.wkyle.bankrecord.utils.HashSHAUtils;
 
-public class LoginModel extends DBConnect {
+public class LoginModel  {
 
     private static LoginModel instance = new LoginModel();
+    DBConnect conn = null;
 
     private LoginModel() {
+         conn = new DBConnect();
     }
 
     public static LoginModel getInstance() {
@@ -32,7 +34,8 @@ public class LoginModel extends DBConnect {
 
     public Boolean getCredentials(String username, String password) {
         String query = "SELECT * FROM brs2021_users WHERE uname = ? and passwd = ?;";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+
+        try (PreparedStatement stmt = conn.getConnection().prepareStatement(query)) {
             stmt.setString(1, username);
             stmt.setString(2, AccountHelper.getInstance().encryptedPassword(password));
             ResultSet rs = stmt.executeQuery();
@@ -45,6 +48,10 @@ public class LoginModel extends DBConnect {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+           if(null!= conn.getConnection()){
+               conn.getConnection();
+           }
         }
         return false;
     }

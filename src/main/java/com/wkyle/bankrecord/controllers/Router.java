@@ -32,11 +32,11 @@ public class Router {
         }
     }
 
-    public static void goToAccountManagerView() {
+    public static void goToManagerView() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Router.class.getResource("/com/wkyle/bankrecord/views/AdminView.fxml"));
             AnchorPane root = fxmlLoader.load();
-            AdminController controller = (AdminController)fxmlLoader.getController();
+            AdminController controller = (AdminController) fxmlLoader.getController();
             controller.setManagerType(AccountModel.RoleType.ACCOUNT_MANAGER);
             Main.stage.setTitle("Admin View");
             Scene scene = new Scene(root);
@@ -47,10 +47,10 @@ public class Router {
         }
     }
 
-    public static void goToClientView(int cid) {
+    public static void goToFundsOperateView(int cid) {
         try {
             AnchorPane root;
-            root = (AnchorPane) FXMLLoader.load(Router.class.getResource("/com/wkyle/bankrecord/views/ClientView.fxml"));
+            root = (AnchorPane) FXMLLoader.load(Router.class.getResource("/com/wkyle/bankrecord/views/FundsOperateView.fxml"));
             Main.stage.setTitle("Client View");
             Scene scene = new Scene(root);
             addCssForScene(scene);

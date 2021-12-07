@@ -11,10 +11,8 @@ import com.wkyle.bankrecord.Dao.LoginModel;
 import com.wkyle.bankrecord.Dao.RecordHelper;
 import com.wkyle.bankrecord.models.*;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
@@ -48,13 +46,13 @@ public class AdminController implements Initializable {
     private TableColumn<AccountModel, String> roleType;
 
     @FXML
-    private TableView<ClientModel> tblRecords;
+    private TableView<FundsRecordModel> tblRecords;
     @FXML
-    private TableColumn<ClientModel, String> recordTid;
+    private TableColumn<FundsRecordModel, String> recordTid;
     @FXML
-    private TableColumn<ClientModel, String> recordCid;
+    private TableColumn<FundsRecordModel, String> recordCid;
     @FXML
-    private TableColumn<ClientModel, String> recordAmount;
+    private TableColumn<FundsRecordModel, String> recordAmount;
 
     public void setManagerType(AccountModel.RoleType managerType) {
         switch (managerType) {
@@ -83,9 +81,9 @@ public class AdminController implements Initializable {
         roleType.setCellValueFactory(new PropertyValueFactory<AccountModel, String>("roleTypeString"));
         Platform.runLater(() -> viewAccounts());
 
-        recordTid.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("tid"));
-        recordCid.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("cid"));
-        recordAmount.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("balanceStr"));
+        recordTid.setCellValueFactory(new PropertyValueFactory<FundsRecordModel, String>("tid"));
+        recordCid.setCellValueFactory(new PropertyValueFactory<FundsRecordModel, String>("cid"));
+        recordAmount.setCellValueFactory(new PropertyValueFactory<FundsRecordModel, String>("balanceStr"));
     }
 
     public AdminController() {
@@ -144,23 +142,24 @@ public class AdminController implements Initializable {
     }
 
     private void filterByCid(int cid) {
-        List<ClientModel> records = RecordHelper.getInstance().getRecords(cid);
+        List<FundsRecordModel> records = RecordHelper.getInstance().getRecords(cid);
         tblRecords.getItems().setAll(records);
         if (records.size() > 0) {
             filteredBalance.setVisible(true);
             double sum = 0;
             for (int i = 0; i < records.size(); i++) {
-                ClientModel model = records.get(i);
+                FundsRecordModel model = records.get(i);
                 sum += model.getBalance();
             }
-            updateUserBalance(cid,sum);
+            updateUserBalance(cid, sum);
         } else {
             filteredBalance.setVisible(false);
         }
     }
+
     private void updateUserBalance(int cid, double balance) {
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
-        filteredBalance.setText(String.format("Cid: %d, Balance:  %s", cid,numberFormat.format(balance)));
+        filteredBalance.setText(String.format("Cid: %d, Balance:  %s", cid, numberFormat.format(balance)));
     }
 
     public void addAccount() {
@@ -221,37 +220,37 @@ public class AdminController implements Initializable {
     }
 
     public void addRecord() {
-        DialogController.recordInfoInputDialog("Add Record", null, new Function<ClientModel, ClientModel>() {
+        DialogController.recordInfoInputDialog("Add Record", null, new Function<FundsRecordModel, FundsRecordModel>() {
             @Override
-            public ClientModel apply(ClientModel clientModel) {
-                Boolean flag = RecordHelper.getInstance().updateBalance(clientModel.getCid(), clientModel.getBalance());
+            public FundsRecordModel apply(FundsRecordModel fundsRecordModel) {
+                Boolean flag = RecordHelper.getInstance().updateBalance(fundsRecordModel.getCid(), fundsRecordModel.getBalance());
                 if (flag) {
                     Platform.runLater(() -> updateRecordTableData());
                 }
-                return clientModel;
+                return fundsRecordModel;
             }
         });
     }
 
     public void editRecord() {
-        ClientModel model = tblRecords.getSelectionModel().getSelectedItem();
+        FundsRecordModel model = tblRecords.getSelectionModel().getSelectedItem();
         if (model == null) {
             return;
         }
-        DialogController.recordInfoInputDialog("Edit Record", model, new Function<ClientModel, ClientModel>() {
+        DialogController.recordInfoInputDialog("Edit Record", model, new Function<FundsRecordModel, FundsRecordModel>() {
             @Override
-            public ClientModel apply(ClientModel clientModel) {
-                Boolean flag = RecordHelper.getInstance().updateRecord(model.getTid(), clientModel.getBalance());
+            public FundsRecordModel apply(FundsRecordModel fundsRecordModel) {
+                Boolean flag = RecordHelper.getInstance().updateRecord(model.getTid(), fundsRecordModel.getBalance());
                 if (flag) {
                     Platform.runLater(() -> updateRecordTableData());
                 }
-                return clientModel;
+                return fundsRecordModel;
             }
         });
     }
 
     public void deleteRecord() {
-        ClientModel model = tblRecords.getSelectionModel().getSelectedItem();
+        FundsRecordModel model = tblRecords.getSelectionModel().getSelectedItem();
         Boolean flag = RecordHelper.getInstance().deleteRecord(model.getTid());
         if (flag) {
             Platform.runLater(() -> updateRecordTableData());

@@ -9,6 +9,7 @@ import java.util.function.Function;
 import com.wkyle.bankrecord.models.AccountModel;
 import com.wkyle.bankrecord.Dao.LoginModel;
 import com.wkyle.bankrecord.Dao.RecordHelper;
+import com.wkyle.bankrecord.models.FundsRecordModel;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
@@ -17,12 +18,11 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import com.wkyle.bankrecord.models.ClientModel;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 
 
-public class ClientController implements Initializable {
+public class FundsOperateController implements Initializable {
 	
 	private int userid;
 	@FXML
@@ -33,11 +33,11 @@ public class ClientController implements Initializable {
 	/***** TABLEVIEW intel *********************************************************************/
 
 	@FXML
-	private TableView<ClientModel> tblRecords;
+	private TableView<FundsRecordModel> tblRecords;
 	@FXML
-	private TableColumn<ClientModel, String> tid;
+	private TableColumn<FundsRecordModel, String> tid;
 	@FXML
-	private TableColumn<ClientModel, String> balance;
+	private TableColumn<FundsRecordModel, String> balance;
 
     public void customResize(TableView<?> view) {
 
@@ -61,8 +61,8 @@ public class ClientController implements Initializable {
 		System.out.println("Welcome id " + userid);
 		userLbl.setText(String.format("Welcome %s, id: %d", current.getUname(), current.getCid()));
 
-		tid.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("tid"));
-		balance.setCellValueFactory(new PropertyValueFactory<ClientModel, String>("balanceStr"));
+		tid.setCellValueFactory(new PropertyValueFactory<FundsRecordModel, String>("tid"));
+		balance.setCellValueFactory(new PropertyValueFactory<FundsRecordModel, String>("balanceStr"));
 
 		// auto adjust width of columns depending on their content
 		tblRecords.setColumnResizePolicy((param) -> true);
@@ -77,7 +77,7 @@ public class ClientController implements Initializable {
 	}
 
 	public void viewRecords() {
-		tblRecords.getItems().setAll(RecordHelper.getInstance().getRecords(userid)); // load table data from ClientModel List
+		tblRecords.getItems().setAll(RecordHelper.getInstance().getRecords(userid)); // load table data from FundsRecordModel List
 		tblRecords.setVisible(true); // set tableview to visible if not
 	}
 
